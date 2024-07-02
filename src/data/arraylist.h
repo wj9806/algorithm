@@ -18,7 +18,7 @@ typedef struct {
     ELE * data;
 } arraylist;
 
-typedef void (*func) (ELE);
+typedef void (*ARRAY_FOREACH) (ELE);
 
 /**
  * init given capacity's arraylist
@@ -26,14 +26,21 @@ typedef void (*func) (ELE);
 arraylist * arraylist_init(int capacity);
 
 /**
- * add element into arraylist
+ * Appends the specified element to the end of this list.
  */
 bool arraylist_add(arraylist * list, ELE ele);
 
 /**
+ * Inserts the specified element at the specified position in this
+ * list. Shifts the element currently at that position (if any) and
+ * any subsequent elements to the right (adds one to their indices).
+ */
+bool arraylist_insert(arraylist * list, int index, ELE ele);
+
+/**
  * Iterate through the arraylist following the given function
  */
-void arraylist_foreach(arraylist * list, func func);
+void arraylist_foreach(arraylist * list, ARRAY_FOREACH func);
 
 /**
  * destroy the arraylist
@@ -42,14 +49,39 @@ void arraylist_foreach(arraylist * list, func func);
 void arraylist_destroy(arraylist * list);
 
 /**
- * get the given index's element
+ * Returns the element at the specified position in this list.
  */
 void * arraylist_get(arraylist * list, int index);
 
 /**
- * get arraylist size
- * @param list
- * @return
+ * Removes the element at the specified position in this list.
+ */
+void * arraylist_remove(arraylist * list, int index);
+
+/**
+ * Returns the index of the first occurrence of the specified element
+ * in this list, or -1 if this list does not contain the element.
+ */
+int arraylist_indexof(arraylist * list, ELE ele);
+
+/**
+ * Returns true if this list contains the specified element
+ */
+static inline bool arraylist_contains(arraylist * list, ELE ele)
+{
+    return arraylist_indexof(list, ele) >= 0;
+}
+
+/**
+ * Returns true if this list contains no elements.
+ */
+static inline bool arraylist_empty(arraylist * list)
+{
+    return list->size == 0;
+}
+
+/**
+ * Returns arraylist size
  */
 static inline int arraylist_size(arraylist * list)
 {
@@ -57,7 +89,7 @@ static inline int arraylist_size(arraylist * list)
 }
 
 /**
- * get arraylist capacity
+ * Returns arraylist capacity
  */
 static inline int arraylist_capacity(arraylist * list)
 {
@@ -67,5 +99,8 @@ static inline int arraylist_capacity(arraylist * list)
 /** convert ele to given TYPE */
 #define arraylist_get_bytype(list, index, TYPE) \
             (TYPE*)arraylist_get(list, index)
+
+#define arraylist_remove_bytype(list, index, TYPE) \
+            (TYPE*)arraylist_remove(list, index)
 
 #endif //ALGORITHM_ARRAYLIST_H

@@ -54,12 +54,75 @@ bool arraylist_add(arraylist * list, ELE ele)
     return true;
 }
 
+bool arraylist_insert(arraylist * list, int index, ELE ele)
+{
+    if(index > list->size || index < 0)
+    {
+        perror( "Index out of bounds\n");
+        return false;
+    }
+
+    //resize arraylist if necessary
+    if(list->size == list->capacity)
+    {
+        if(!arraylist_resize(list, list->capacity << 1))
+        {
+            return false;
+        }
+    }
+
+
+    //index 5 cap 7
+    //copy data
+    for (int i = list->size; i > index; --i) {
+        list->data[i] = list->data[i-1];
+    }
+
+    list->data[index] = ele;
+    list->size++;
+    return true;
+}
+
 void * arraylist_get(arraylist * list, int index)
 {
     return list->data[index];
 }
 
-void arraylist_foreach(arraylist * list, func func)
+void * arraylist_remove(arraylist * list, int index)
+{
+    if (index >= list->size || index < 0)
+    {
+        perror( "Index out of bounds\n");
+        return (void *) 0;
+    }
+
+    void * removed_ele = list->data[index];
+
+    for (size_t i = index; i < list->size - 1; ++i)
+    {
+        list->data[i] = list->data[i + 1];
+    }
+    list->size--;
+    if (list->size > 0 && list->size <= (list->capacity >> 2))
+    {
+        arraylist_resize(list, list->capacity >> 1);
+    }
+
+    return removed_ele;
+}
+
+int arraylist_indexof(arraylist * list, ELE ele)
+{
+    for (int i = 0; i < list->size; ++i) {
+        if(ele == list->data[i])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void arraylist_foreach(arraylist * list, ARRAY_FOREACH func)
 {
     for (int i = 0; i < list->size; ++i) {
         func(list->data[i]);
