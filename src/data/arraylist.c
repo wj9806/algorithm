@@ -71,8 +71,6 @@ bool arraylist_insert(arraylist * list, int index, ELE ele)
         }
     }
 
-
-    //index 5 cap 7
     //copy data
     for (int i = list->size; i > index; --i) {
         list->data[i] = list->data[i-1];

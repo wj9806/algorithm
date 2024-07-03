@@ -14,7 +14,7 @@ file(GLOB_RECURSE SOURCE_LIST
         "src/data/*.c"
 )
 
-set(TEST_MODULE TEST_ARRAY)
+set(TEST_MODULE TEST_BASETYPE_ARRAY)
 
 option(${TEST_MODULE} "module should be tested" ON)
 

@@ -6,6 +6,9 @@
 #define ALGORITHM_ARRAYLIST_H
 
 #include "common.h"
+#include "basetype_arraylist.h"
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ support for struct~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
 #define ELE void*
 

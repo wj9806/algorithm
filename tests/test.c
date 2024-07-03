@@ -4,7 +4,10 @@
 
 void arraylist_test();
 
+void basetype_arraylist_test();
+
 int main()
 {
     arraylist_test();
+    basetype_arraylist_test();
 }
