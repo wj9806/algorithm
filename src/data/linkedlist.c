@@ -4,7 +4,6 @@
 
 #include "linkedlist.h"
 #include <stdlib.h>
-#include <stdio.h>
 #include "common.h"
 
 linkedlist * linkedlist_init()
@@ -18,6 +17,14 @@ linkedlist * linkedlist_init()
 
     list->first = list->last = (node *)0;
     list->size = 0;
+    list->capacity = INT_MAX;
+    return list;
+}
+
+linkedlist * linkedlist_init_capacity(int capacity)
+{
+    linkedlist * list = linkedlist_init();
+    list->capacity = capacity;
     return list;
 }
 
@@ -31,8 +38,14 @@ void linkedlist_destroy(linkedlist * list)
     free(list);
 }
 
-void linkedlist_insert_first(linkedlist * list, void * data)
+bool linkedlist_insert_first(linkedlist * list, void * data)
 {
+    if (list->size >= list->capacity)
+    {
+        debug_warn("linkedlist is full: %d >= %d", list->size >= list->capacity);
+        return false;
+    }
+
     node * nd = (node *) malloc(sizeof(node));
 
     //set node
@@ -51,10 +64,16 @@ void linkedlist_insert_first(linkedlist * list, void * data)
         list->first = nd;
     }
     list->size++;
+    return true;
 }
 
-void linkedlist_insert_last(linkedlist * list, void * data)
+bool linkedlist_insert_last(linkedlist * list, void * data)
 {
+    if (list->size >= list->capacity)
+    {
+        debug_warn("linkedlist is full: %d >= %d", list->size >= list->capacity);
+        return false;
+    }
     node * nd = (node *) malloc(sizeof(node));
 
     //set node
@@ -73,6 +92,7 @@ void linkedlist_insert_last(linkedlist * list, void * data)
         list->last = nd;
     }
     list->size++;
+    return true;
 }
 
 void * linkedlist_remove_first(linkedlist * list)
@@ -177,6 +197,12 @@ bool linkedlist_remove(linkedlist * list, void * data)
 
 bool linkedlist_insert_after(linkedlist * list, void * pre_data, void * cur_data)
 {
+    if (list->size >= list->capacity)
+    {
+        debug_warn("linkedlist is full: %d >= %d", list->size >= list->capacity);
+        return false;
+    }
+
     node * pre = find_node(list, pre_data);
     if (pre == (node *)0)
     {

@@ -6,6 +6,7 @@
 #define ALGORITHM_LINKEDLIST_H
 
 #include "common.h"
+#include <limits.h>
 
 typedef struct node {
     /** pre node */
@@ -39,12 +40,19 @@ typedef struct linkedlist {
     node * last;
     /** the size of linkedlist*/
     int size;
+    /** the capacity of linkedlist**/
+    int capacity;
 } linkedlist;
 
 /**
  * init linkedlist
  */
 linkedlist * linkedlist_init();
+
+/**
+ * init linkedlist with capacity
+ */
+linkedlist * linkedlist_init_capacity(int capacity);
 
 /**
  * destroy linkedlist
@@ -92,14 +100,22 @@ static inline void linkedlist_node_set_next(node* pre, node* next) {
 }
 
 /**
+ * Returns linkedlist capacity
+ */
+static inline int linkedlist_capacity(linkedlist * list)
+{
+    return list->capacity;
+}
+
+/**
  * Inserts the specified node at the beginning of this list.
  */
-void linkedlist_insert_first(linkedlist * list, void * data);
+bool linkedlist_insert_first(linkedlist * list, void * data);
 
 /**
  * Appends the specified node to the end of this list.
  */
-void linkedlist_insert_last(linkedlist * list, void * data);
+bool linkedlist_insert_last(linkedlist * list, void * data);
 
 #define linkedlist_add(list, data) linkedlist_insert_last(list, data)
 
