@@ -12,9 +12,12 @@ include_directories(
 file(GLOB_RECURSE SOURCE_LIST
         "tests/*.c"
         "src/data/*.c"
+        "src/tools/*.c"
 )
 
-set(TEST_MODULE TEST_BASETYPE_ARRAY)
+add_definitions(-DEN_DEBUG)
+
+set(TEST_MODULE TEST_LINKED_TEST)
 
 option(${TEST_MODULE} "module should be tested" ON)
 

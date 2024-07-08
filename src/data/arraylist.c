@@ -4,12 +4,13 @@
 
 #include "arraylist.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 arraylist * arraylist_init(int capacity)
 {
     arraylist * list = malloc_type(arraylist);
     if (!list) {
-        perror("Failed to create arraylist");
+        debug_error("Failed to create arraylist");
         return (arraylist *) 0;
     }
 
@@ -18,7 +19,7 @@ arraylist * arraylist_init(int capacity)
 
     list->data = malloc_size_type(capacity, ELE);
     if (!list->data) {
-        perror("Failed to allocate data array");
+        debug_error("Failed to allocate data array");
         free(list);
         return (arraylist *) 0;
     }
@@ -33,7 +34,7 @@ static bool arraylist_resize(arraylist * list, int capacity)
 {
     ELE* data = realloc_size_type(list->data, capacity, ELE);
     if (!data) {
-        perror("Failed to resize data array");
+        debug_error("Failed to resize data array");
         return false;
     }
     list->data = data;
@@ -58,7 +59,7 @@ bool arraylist_insert(arraylist * list, int index, ELE ele)
 {
     if(index > list->size || index < 0)
     {
-        perror( "Index out of bounds\n");
+        debug_error( "Index out of bounds\n");
         return false;
     }
 
@@ -90,7 +91,7 @@ void * arraylist_remove(arraylist * list, int index)
 {
     if (index >= list->size || index < 0)
     {
-        perror( "Index out of bounds\n");
+        debug_error( "Index out of bounds\n");
         return (void *) 0;
     }
 

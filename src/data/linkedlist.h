@@ -5,18 +5,16 @@
 #ifndef ALGORITHM_LINKEDLIST_H
 #define ALGORITHM_LINKEDLIST_H
 
+#include "common.h"
+
 typedef struct node {
     /** pre node */
     struct node * pre;
     /** next node */
     struct node * next;
+    /* data */
+    void * data;
 } node;
-
-/** init node */
-static inline void node_init(node * n)
-{
-    n->pre = n->next = (node*)0;
-}
 
 /**
  * Returns node's pre node
@@ -96,27 +94,29 @@ static inline void linkedlist_node_set_next(node* pre, node* next) {
 /**
  * Inserts the specified node at the beginning of this list.
  */
-void linkedlist_insert_first(linkedlist * list, node * node);
+void linkedlist_insert_first(linkedlist * list, void * data);
 
 /**
  * Appends the specified node to the end of this list.
  */
-void linkedlist_insert_last(linkedlist * list, node * node);
+void linkedlist_insert_last(linkedlist * list, void * data);
+
+#define linkedlist_add(list, data) linkedlist_insert_last(list, data)
 
 /**
  * Removes and returns the first node from this list.
  */
-node * linkedlist_remove_first(linkedlist * list);
+void * linkedlist_remove_first(linkedlist * list);
 
 /**
  * Removes and returns the last node from this list.
  */
-node * linkedlist_remove_last(linkedlist * list);
+void * linkedlist_remove_last(linkedlist * list);
 
 /**
  * Removes and returns the given node
  */
-node * linkedlist_remove(linkedlist * list, node * node);
+bool linkedlist_remove(linkedlist * list, void * data);
 
 /**
  * Inserts a node after a given node
@@ -124,20 +124,14 @@ node * linkedlist_remove(linkedlist * list, node * node);
  * @param pre given node
  * @param node The node that needs to be Insert in
  */
-void linkedlist_insert_after(linkedlist * list, node * pre, node * node);
+bool linkedlist_insert_after(linkedlist * list, void * pre_data, void * cur_data);
 
-//Gets the relative address offset of the node_name in the parent_type
-#define offset_int_parent(parent_type, node_name) \
-    ((char *)&(((parent_type *)0)->node_name))
-
-//Get the address of the parent_type
-#define parent_addr(node, parent_type, node_name) \
-    ((char *)node - offset_int_parent(parent_type, node_name))
-
-//Convert to parent_type* struct
-#define linkedlist_node_parent(node, parent_type, node_name) \
-    ((parent_type *)(node ? parent_addr(node, parent_type, node_name) : 0))
+/**
+ * Returns true if this list contains the specified element.
+ */
+bool linkedlist_contains(linkedlist * list, void * data);
 
 #define linkedlist_for_each(node, list)      for ((node) = (list)->first; (node); (node) = (node)->next)
+
 
 #endif //ALGORITHM_LINKEDLIST_H

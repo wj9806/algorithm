@@ -8,6 +8,7 @@
 #include "common.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ support for base type~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -48,14 +49,14 @@
     {\
         TYPE##_arraylist * list = malloc_type(TYPE##_arraylist);\
         if (!list) {\
-            perror("Failed to create arraylist");\
+            debug_error("Failed to create arraylist");\
             return (TYPE##_arraylist *) 0;\
         }\
         list->capacity = capacity;\
         list->size = 0;\
         list->data = malloc_size_type(capacity, TYPE);\
         if (!list->data) {\
-            perror("Failed to allocate data array");\
+            debug_error("Failed to allocate data array");\
             free(list);\
             return (TYPE##_arraylist *) 0;\
         }\
@@ -65,7 +66,7 @@
     {\
         TYPE* data = realloc_size_type(list->data, capacity, TYPE);\
         if (!data) {\
-            perror("Failed to resize data array");\
+            debug_error("Failed to resize data array");\
             return false;\
         }\
         list->data = data;\
@@ -88,7 +89,7 @@
     {\
         if(index > list->size || index < 0)\
         {\
-            perror( "Index out of bounds\n");\
+            debug_error( "Index out of bounds\n");\
             return false;\
         }\
         if(list->size == list->capacity)\
@@ -124,7 +125,7 @@
     {                                       \
         if (index >= list->size || index < 0)\
         {\
-            perror( "Index out of bounds\n");\
+            debug_error( "Index out of bounds\n");\
             return (TYPE)0;\
         }\
         \
