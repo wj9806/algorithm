@@ -6,6 +6,11 @@
 
 stack * stack_init()
 {
+    return stack_init_capacity(INT_MAX);
+}
+
+stack * stack_init_capacity(int capacity)
+{
     stack * s = (stack *)malloc(sizeof(stack));
     if(!s)
     {
@@ -15,13 +20,6 @@ stack * stack_init()
 
     s->list.first = s->list.last = (node *)0;
     s->list.size = 0;
-    s->list.capacity = INT_MAX;
-    return s;
-}
-
-stack * stack_init_capacity(int capacity)
-{
-    stack * s = stack_init();
     s->list.capacity = capacity;
     return s;
 }

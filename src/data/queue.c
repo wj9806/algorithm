@@ -7,6 +7,11 @@
 
 queue * queue_init()
 {
+    return queue_init_capacity(INT_MAX);
+}
+
+queue * queue_init_capacity(int capacity)
+{
     queue * q = (queue *)malloc(sizeof(queue));
     if(!q)
     {
@@ -16,13 +21,6 @@ queue * queue_init()
 
     q->list.first = q->list.last = (node *)0;
     q->list.size = 0;
-    q->list.capacity = INT_MAX;
-    return q;
-}
-
-queue * queue_init_capacity(int capacity)
-{
-    queue * q = queue_init();
     q->list.capacity = capacity;
     return q;
 }

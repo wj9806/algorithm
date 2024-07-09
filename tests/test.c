@@ -6,10 +6,12 @@
 void arraylist_test();
 void basetype_arraylist_test();
 void linkedlist_test();
+void hash_table_test();
 
 int main()
 {
     arraylist_test();
     basetype_arraylist_test();
     linkedlist_test();
+    hash_table_test();
 }

@@ -8,6 +8,11 @@
 
 linkedlist * linkedlist_init()
 {
+    return linkedlist_init_capacity(INT_MAX);
+}
+
+linkedlist * linkedlist_init_capacity(int capacity)
+{
     linkedlist * list = malloc_type(linkedlist);
     if(!list)
     {
@@ -17,15 +22,9 @@ linkedlist * linkedlist_init()
 
     list->first = list->last = (node *)0;
     list->size = 0;
-    list->capacity = INT_MAX;
-    return list;
-}
-
-linkedlist * linkedlist_init_capacity(int capacity)
-{
-    linkedlist * list = linkedlist_init();
     list->capacity = capacity;
     return list;
+
 }
 
 void linkedlist_destroy(linkedlist * list)
