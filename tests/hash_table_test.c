@@ -6,6 +6,8 @@
 
 #ifdef TEST_HASH_TABLE
 
+#define print_line  printf("%s\n", "------------------------------------");
+
 void debug_hash_table(hash_table * h)
 {
     printf("hash_table:\n");
@@ -34,9 +36,8 @@ void debug_hash_table(hash_table * h)
 #define debug_hash_table(h)
 #endif
 
-void hash_table_test()
+static void test_put()
 {
-#ifdef TEST_HASH_TABLE
     hash_table * h = hashtable_init(int_hash_code);
 
     int i1 = 0;
@@ -59,7 +60,56 @@ void hash_table_test()
     hashtable_put(h, &i3, &v2);
     hashtable_put(h, (int*)0, &v2);
     debug_hash_table(h);
-    printf("hashtable size: %d", hashtable_size(h));
+    printf("hashtable size: %d\n", hashtable_size(h));
     hashtable_destroy(h);
+    print_line
+}
+
+#define put(i, h) \
+     int in##i = i;     \
+     hashtable_put(h, &in##i, &in##i); \
+     debug_hash_table(h);
+
+#define X(i) put(i, h);
+
+#define INDEX_LIST \
+    X(1) \
+    X(19)           \
+    X(3)          \
+    X(35)           \
+    X(51)       \
+    X(6)          \
+    X(7)          \
+    X(8)          \
+    X(9)          \
+    X(10)          \
+    X(11)          \
+    X(12)          \
+    X(13)          \
+    X(14)          \
+    X(15)          \
+    X(16)          \
+    X(17)          \
+    X(18)          \
+    X(20)          \
+    X(21)          \
+    X(22)          \
+    X(23)          \
+    X(24)          \
+    X(32)
+
+static void test_resize()
+{
+    hash_table * h = hashtable_init_size(int_hash_code, 16);
+    INDEX_LIST
+    hashtable_destroy(h);
+    print_line
+}
+
+void hash_table_test()
+{
+#ifdef TEST_HASH_TABLE
+    test_put();
+    test_resize();
 #endif
 }

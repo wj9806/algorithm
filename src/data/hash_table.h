@@ -9,11 +9,13 @@
 #define MAX_TABLE_SIZE          (1<<30)
 #define DEFAULT_LOAD_FACTOR     0.75f
 
+#include <stdint.h>
+
 typedef struct entry {
     void * key;
     void * value;
     struct entry * next_entry;
-    int hash;
+    long hash;
 } entry;
 
 /**
@@ -29,16 +31,20 @@ typedef struct hash_table {
     /* load factor */
     float load_factor;
     /* hash code function */
-    int (*hash_code)(struct hash_table* h, void * key);
+    long (*hash_code)(struct hash_table* h, void * key);
+    /* The next size value at which to resize (t_size * load factor). */
+    int threshold;
 } hash_table;
 
-int int_hash_code(hash_table* h, void * key);
+long int_hash_code(hash_table* h, void * key);
+
+long void_hash_code(hash_table* h, void * key);
 
 /* init hash table */
-hash_table * hashtable_init(int (*hash_code)(hash_table* h, void * key));
+hash_table * hashtable_init(long (*hash_code)(hash_table* h, void * key));
 
 /* init hash table with table size */
-hash_table * hashtable_init_size(int (*hash_code)(hash_table* h, void * key), int t_size);
+hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key), int t_size);
 
 /* destroy hash table */
 void hashtable_destroy(hash_table * h);
