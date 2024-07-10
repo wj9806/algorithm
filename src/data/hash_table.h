@@ -61,6 +61,11 @@ void * hashtable_put(hash_table * h, void * k, void * v);
 void * hashtable_get(hash_table * h, void * k);
 
 /**
+ * Removes the mapping for the specified key from this map if present.
+ */
+void * hashtable_remove(hash_table * h, void * k);
+
+/**
  * Returns true if this map contains a mapping for the
  * specified key.
  */

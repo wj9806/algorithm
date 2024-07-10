@@ -48,7 +48,7 @@ void debug_hash_table(hash_table * h)
 #define debug_hash_table(h)
 #endif
 
-static void test_put()
+static void test_put_remove()
 {
     hash_table * h = hashtable_init(int_hash_code);
 
@@ -79,6 +79,15 @@ static void test_put()
     printf("hashtable -3 key: %d\n", *(int*)hashtable_get(h, (int*)&i6));
 
     hashtable_foreach(h, print_tab_func);
+
+    printf("\nhashtable remove 0: %d\n", *(int*) hashtable_remove(h, &i1));
+    debug_hash_table(h);
+    printf("\nhashtable remove null: %d\n", *(int*) hashtable_remove(h, (int*)0));
+    debug_hash_table(h);
+
+    printf("\nhashtable remove -3: %d\n", *(int*) hashtable_remove(h, &i6));
+    debug_hash_table(h);
+
     hashtable_destroy(h);
     print_line
 }
@@ -127,7 +136,7 @@ static void test_resize()
 void hash_table_test()
 {
 #ifdef TEST_HASH_TABLE
-    test_put();
+    test_put_remove();
     //test_resize();
 #endif
 }
