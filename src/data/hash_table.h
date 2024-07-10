@@ -51,6 +51,9 @@ hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key), i
 /* destroy hash table */
 void hashtable_destroy(hash_table * h);
 
+/* Removes all of the entry from this map */
+void hashtable_clear(hash_table * h);
+
 /* put k v*/
 void * hashtable_put(hash_table * h, void * k, void * v);
 
@@ -80,6 +83,12 @@ void hashtable_foreach(hash_table * h, bi_consumer consumer);
 static inline unsigned int hashtable_size(hash_table * h)
 {
     return h->size;
+}
+
+/* Returns true if this hash table is empty */
+static inline bool hashtable_is_empty(hash_table * h)
+{
+    return h->size == 0;
 }
 
 #endif //ALGORITHM_HASH_TABLE_H

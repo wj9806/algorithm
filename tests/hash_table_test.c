@@ -87,7 +87,8 @@ static void test_put_remove()
 
     printf("\nhashtable remove -3: %d\n", *(int*) hashtable_remove(h, &i6));
     debug_hash_table(h);
-
+    hashtable_clear(h);
+    debug_hash_table(h);
     hashtable_destroy(h);
     print_line
 }

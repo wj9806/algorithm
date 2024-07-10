@@ -210,6 +210,14 @@ hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key),
 
 void hashtable_destroy(hash_table * h)
 {
+    hashtable_clear(h);
+    free(h->table);
+    h->table = (entry**)0;
+    free(h);
+}
+
+void hashtable_clear(hash_table * h)
+{
     if(!h) return;
     entry * cur, * tmp;
     for (int i = 0; i < h->t_size; ++i)
@@ -223,10 +231,7 @@ void hashtable_destroy(hash_table * h)
         }
         h->table[i] = (entry*)0;
     }
-
-    free(h->table);
-    h->table = (entry**)0;
-    free(h);
+    h->size = 0;
 }
 
 void * hashtable_put(hash_table * h, void * k, void * v)
