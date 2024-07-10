@@ -29,7 +29,7 @@ static unsigned int next_power_of_two(unsigned int n) {
 
 static entry * create_entry(hash_table * h, void * k, void * v)
 {
-    entry * e = (entry*) malloc(sizeof(entry));
+    entry * e = malloc_type(entry);
     e->key = k;
     e->value = v;
     e->next_entry = (entry*)0;
@@ -185,14 +185,14 @@ hash_table * hashtable_init(long (*hash_code)(hash_table* h, void * key))
 hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key),
                                  int t_size)
 {
-    hash_table* tab = (hash_table*)malloc(sizeof(hash_table));
+    hash_table* tab = malloc_type(hash_table);
     if(!tab)
     {
         debug_error("create hash table failed");
         return (hash_table*) 0;
     }
     tab->t_size = t_size <= 0 ? INIT_TABLE_SIZE : next_power_of_two(t_size);
-    entry ** table = (entry**) calloc(tab->t_size, sizeof(entry*));
+    entry ** table = calloc_size_type(tab->t_size, entry*);
     if(!table)
     {
         debug_error("create hash table failed");

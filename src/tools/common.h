@@ -17,6 +17,9 @@
 #define malloc_size_type(SIZE, TYPE) \
     (TYPE*)malloc(SIZE * sizeof(TYPE))
 
+#define calloc_size_type(SIZE, TYPE) \
+    (TYPE*)calloc(SIZE, sizeof(TYPE))
+
 #define realloc_type(BLOCK, TYPE) \
     (TYPE*)realloc(BLOCK, sizeof(TYPE))
 

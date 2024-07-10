@@ -50,7 +50,7 @@ void debug_hash_table(hash_table * h)
 
 static void test_put_remove()
 {
-    hash_table * h = hashtable_init(int_hash_code);
+    hash_table * h = hashtable_init_size(int_hash_code, 1);
 
     int i1 = 0;
     int i2 = 1;
