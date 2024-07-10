@@ -3,7 +3,6 @@
 //
 
 #include "hash_table.h"
-#include "common.h"
 #include <stdlib.h>
 #include <limits.h>
 
@@ -118,6 +117,25 @@ static void table_resize(hash_table* h)
     h->table = new_table;
 }
 
+static entry * get_entry(hash_table * h, void * key)
+{
+    entry * first, * e; unsigned int hash;
+    if ((first = h->table[(hash = tab_index(h, key))]) != (entry*) 0)
+    {
+        if (first->hash == hash && first->key == key)
+            return first;
+        if ((e = first->next_entry) != (entry*)0)
+        {
+            do {
+                if (e->hash == hash && e->key == key)
+                    return e;
+            } while ((e = e->next_entry) != (entry*)0);
+        }
+    }
+
+    return first;
+}
+
 long int_hash_code(hash_table* h, void * key)
 {
     return *(int*)key;
@@ -221,4 +239,25 @@ void * hashtable_put(hash_table * h, void * k, void * v)
         table_resize(h);
     }
     return old_v;
+}
+
+void * hashtable_get(hash_table * h, void * k)
+{
+    entry * e;
+    return (e = get_entry(h, k)) == (entry*)0 ? (void *)0 : e->value;
+}
+
+bool hashtable_contains_key(hash_table * h, void * k)
+{
+    return get_entry(h, k) != (entry*)0;
+}
+
+void hashtable_foreach(hash_table * h, bi_consumer consumer)
+{
+    for (int i = 0; i < h->t_size; ++i) {
+        for (entry * e = h->table[i];
+                e != (entry*)0; e = e->next_entry) {
+            consumer(e->key, e->value);
+        }
+    }
 }

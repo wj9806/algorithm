@@ -10,6 +10,8 @@
 #define DEFAULT_LOAD_FACTOR     0.75f
 
 #include <stdint.h>
+#include "common.h"
+#include "function.h"
 
 typedef struct entry {
     void * key;
@@ -51,6 +53,23 @@ void hashtable_destroy(hash_table * h);
 
 /* put k v*/
 void * hashtable_put(hash_table * h, void * k, void * v);
+
+/**
+ * Returns the value to which the specified key is mapped,
+ * or null if this map contains no mapping for the key.
+ */
+void * hashtable_get(hash_table * h, void * k);
+
+/**
+ * Returns true if this map contains a mapping for the
+ * specified key.
+ */
+bool hashtable_contains_key(hash_table * h, void * k);
+
+/**
+ * Performs the given action for each entry in this map until all entries have been processed
+ */
+void hashtable_foreach(hash_table * h, bi_consumer consumer);
 
 /* Returns hash table size */
 static inline unsigned int hashtable_size(hash_table * h)

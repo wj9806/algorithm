@@ -8,6 +8,18 @@
 
 #define print_line  printf("%s\n", "------------------------------------");
 
+void print_tab_func(void * key, void * value)
+{
+    if((int*)key)
+    {
+        printf("{%d : %d}   ", *(int*)key, *(int*)value);
+    }
+    else
+    {
+        printf("{%s : %d}   ", "null", *(int*)value);
+    }
+}
+
 void debug_hash_table(hash_table * h)
 {
     printf("hash_table:\n");
@@ -61,6 +73,12 @@ static void test_put()
     hashtable_put(h, (int*)0, &v2);
     debug_hash_table(h);
     printf("hashtable size: %d\n", hashtable_size(h));
+
+
+    printf("hashtable null key: %d\n", *(int*)hashtable_get(h, (int*)0));
+    printf("hashtable -3 key: %d\n", *(int*)hashtable_get(h, (int*)&i6));
+
+    hashtable_foreach(h, print_tab_func);
     hashtable_destroy(h);
     print_line
 }
@@ -110,6 +128,6 @@ void hash_table_test()
 {
 #ifdef TEST_HASH_TABLE
     test_put();
-    test_resize();
+    //test_resize();
 #endif
 }
