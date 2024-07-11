@@ -7,6 +7,7 @@ void arraylist_test();
 void basetype_arraylist_test();
 void linkedlist_test();
 void hash_table_test();
+void tree_map_test();
 
 int main()
 {
@@ -14,4 +15,5 @@ int main()
     basetype_arraylist_test();
     linkedlist_test();
     hash_table_test();
+    tree_map_test();
 }

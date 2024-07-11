@@ -34,6 +34,18 @@ typedef struct {
     key_compare compare;
 } tree_map;
 
+/* Returns the tree map size */
+static inline unsigned int tree_map_size(tree_map * m)
+{
+    return m->size;
+}
+
+/* Returns the tree map is empty */
+static inline bool tree_map_is_empty(tree_map * m)
+{
+    return !m || m->size == 0;
+}
+
 /* create tree node */
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right,
                              color color, void * key, void * value);

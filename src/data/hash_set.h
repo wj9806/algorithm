@@ -52,7 +52,7 @@ static inline unsigned int hashset_size(hash_set * set)
 /* Returns true if this hash set is empty */
 static inline bool hashset_is_empty(hash_set * set)
 {
-    return set->ht->size == 0;
+    return !set || set->ht->size == 0;
 }
 
 #endif //ALGORITHM_HASH_SET_H

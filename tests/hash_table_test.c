@@ -4,8 +4,6 @@
 #include "hash_table.h"
 #include <stdio.h>
 
-#ifdef TEST_HASH_TABLE
-
 #define print_line  printf("%s\n", "------------------------------------");
 
 void print_tab_func(void * key, void * value)
@@ -20,6 +18,8 @@ void print_tab_func(void * key, void * value)
     }
 }
 
+#ifdef TEST_HASH_TABLE
+
 void debug_hash_table(hash_table * h)
 {
     printf("hash_table:\n");
@@ -29,15 +29,7 @@ void debug_hash_table(hash_table * h)
         curr = h->table[i];
         while (curr != (entry*)0)
         {
-            if((int*)curr->key)
-            {
-                printf("{%d : %d}   ", *(int*)curr->key, *(int*)curr->value);
-            }
-            else
-            {
-                printf("{%s : %d}   ", "null", *(int*)curr->value);
-            }
-
+            print_tab_func(curr->key, curr->value);
             curr = curr->next_entry;
         }
         printf("\n");

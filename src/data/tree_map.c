@@ -77,6 +77,37 @@ static void right_rotate(tree_map * map, tree_node * p)
     }
 }
 
+static tree_node * create_node(void * key, void * value, tree_node * parent)
+{
+    return tree_node_create(parent, (void*)0, (void*)0, BLACK, key, value);
+}
+
+static tree_node * parent_of(tree_node * node)
+{
+    return node ? node->parent : (tree_node *)0;
+}
+
+static tree_node * right_of(tree_node * node)
+{
+    return node ? node->right : (tree_node *)0;
+}
+
+static tree_node * left_of(tree_node * node)
+{
+    return node ? node->left : (tree_node *)0;
+}
+
+/* rebalanced of the red and black trees after put elements */
+static void rebalanced_after_put(tree_map * m, tree_node * n)
+{
+    n->color = RED;
+    if(n != m->root && n->parent->color == RED)
+    {
+
+    }
+    m->root->color = BLACK;
+}
+
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right, color color, void * key, void * value)
 {
     tree_node * n = malloc_type(tree_node);
@@ -96,6 +127,12 @@ tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * r
 
 tree_map * tree_map_init(key_compare compare)
 {
+    if(!compare)
+    {
+        debug_error("key_compare cannot be null");
+        return (tree_map *) 0;
+    }
+
     tree_map * m = malloc_type(tree_map);
     if(!m)
     {
@@ -120,5 +157,44 @@ tree_map * tree_map_init(key_compare compare)
 
 void * tree_map_put(tree_map * m, void * k, void * v)
 {
-    return (void*)0;
+    void * old_v = (void*)0;
+    if (!k)
+    {
+        debug_error("key is null");
+        return old_v;
+    }
+
+    tree_node * n;
+    if(!(n = m->root))
+    {
+        m->root = create_node(k, v, (void*)0);
+        m->size++;
+        return old_v;
+    }
+
+    //find the insert node of parent
+    tree_node * parent; int cmp;
+    do {
+        parent = n;
+        cmp = m->compare(k, parent->key);
+        if (cmp < 0)
+            n = n->left;
+        else if (cmp > 0)
+            n = n->right;
+        else
+        {
+            old_v = n->value;
+            n->value = v;
+            return old_v;
+        }
+    } while (n);
+
+    tree_node * node = create_node(k, v, parent);
+    if(cmp < 0)
+        parent->left = node;
+    else
+        parent->right = node;
+    rebalanced_after_put(m, node);
+    m->size++;
+    return old_v;
 }

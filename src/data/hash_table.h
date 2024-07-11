@@ -88,7 +88,7 @@ static inline unsigned int hashtable_size(hash_table * h)
 /* Returns true if this hash table is empty */
 static inline bool hashtable_is_empty(hash_table * h)
 {
-    return h->size == 0;
+    return !h || h->size == 0;
 }
 
 #endif //ALGORITHM_HASH_TABLE_H
