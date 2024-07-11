@@ -6,10 +6,7 @@
 #define ALGORITHM_COMMON_H
 
 #include <stdlib.h>
-
-#define true        1
-#define false       0
-#define bool        int
+#include <stdbool.h>
 
 #define malloc_type(TYPE) \
     (TYPE*)malloc(sizeof(TYPE))
