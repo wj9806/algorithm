@@ -6,6 +6,7 @@
 #define ALGORITHM_TREE_MAP_H
 
 #include "common.h"
+#include "function.h"
 
 /* the tree node of color */
 typedef enum {
@@ -55,5 +56,15 @@ tree_map * tree_map_init(key_compare compare);
 
 /* put k v*/
 void * tree_map_put(tree_map * m, void * k, void * v);
+
+typedef enum {
+    PRE, IN, POST, LEVEL
+} traversal;
+
+/**
+ * Performs the given action for each entry in this map until all entries have been processed
+ * @param preorder traversal, inorder traversal, postorder traversal, level order traversal
+ */
+void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra);
 
 #endif //ALGORITHM_TREE_MAP_H
