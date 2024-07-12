@@ -67,4 +67,9 @@ typedef enum {
  */
 void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra);
 
+/**
+ * Return to the height of the red and black trees
+ */
+int tree_map_depth(tree_map * m);
+
 #endif //ALGORITHM_TREE_MAP_H

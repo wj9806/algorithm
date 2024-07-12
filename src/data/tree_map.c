@@ -158,7 +158,7 @@ static void level_order(tree_node * node, bi_consumer consumer)
 }
 
 /**
- *  rebalanced of the red and black trees after put elements
+ *  rebalanced of the Red-Black tree after put elements
  *
  *  first condition(1) : 2-3-4 tree insert new node and three-node merge  (node has two elements)
  *        P1   black
@@ -238,6 +238,15 @@ static void rebalanced_after_put(tree_map * m, tree_node * n)
         }
     }
     set_color(m->root, BLACK);
+}
+
+static int depth(tree_node * node)
+{
+    if (!node) return 0;
+
+    int left = depth(node->left);
+    int right = depth(node->right);
+    return left > right ? (left+1) : (right+1);
 }
 
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right, color color, void * key, void * value)
@@ -340,4 +349,9 @@ void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra)
         default:
             in_order(m->root, consumer);
     }
+}
+
+int tree_map_depth(tree_map * m)
+{
+    return depth(m->root);
 }

@@ -47,7 +47,7 @@ void * stack_pop(stack * q)
 
 void * stack_peek(stack * q)
 {
-    return linkedlist_first(&q->list)->data;
+    return linkedlist_first(&q->list);
 }
 
 bool stack_contains(stack * s, void * data)

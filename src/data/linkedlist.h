@@ -78,17 +78,17 @@ static inline int linkedlist_size(linkedlist * list)
 /**
  * Returns the first node in this list.
  */
-static inline node * linkedlist_first(linkedlist * list)
+static inline void * linkedlist_first(linkedlist * list)
 {
-    return list->first;
+    return list->first->data;
 }
 
 /**
  * Returns the last node in this list.
  */
-static inline node * linkedlist_last(linkedlist * list)
+static inline void * linkedlist_last(linkedlist * list)
 {
-    return list->last;
+    return list->last->data;
 }
 
 /**

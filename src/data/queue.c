@@ -48,7 +48,7 @@ void * queue_poll(queue * q)
 
 void * queue_peek(queue * q)
 {
-    return linkedlist_first(&q->list)->data;
+    return linkedlist_first(&q->list);
 }
 
 bool queue_contains(queue * q, void * data)
