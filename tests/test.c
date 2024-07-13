@@ -16,4 +16,5 @@ int main()
     linkedlist_test();
     hash_table_test();
     tree_map_test();
+    getchar();
 }

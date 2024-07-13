@@ -24,15 +24,17 @@ stack * stack_init_capacity(int capacity)
     return s;
 }
 
-void stack_destroy(stack * q)
+void stack_destroy(stack * s)
 {
-    linkedlist list = q->list;
-    node * n;
-    linkedlist_for_each(n, &list)
+    linkedlist list = s->list;
+    node * n, * head = list.first;
+    while (head)
     {
-        free(n);
+        n = head->next;
+        free(head);
+        head = n;
     }
-    free(q);
+    free(s);
 }
 
 bool stack_push(stack * q, void * data)

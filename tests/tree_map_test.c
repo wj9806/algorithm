@@ -16,7 +16,7 @@
 #define RESET       "\033[0m"
 
 #define put(m, i) \
-     printf("插入：%d\n", i);             \
+     printf("insert: %d\n", i);             \
      int in##i = i;     \
      tree_map_put(m, &in##i, &in##i);  \
      printf_rd_tree(map);
@@ -56,14 +56,17 @@ struct print_node
     tree_node * node;
 };
 
+/* Returns the size of full binary tree */
+int full_tree_size(int depth)
+{
+    return depth ? (2 << depth) - 1 : 0;
+}
+
 static void key_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_size)
 {
     *tree_depth = tree_map_depth(m);
-    int size = 0;
-    for (int i = 0; *tree_depth && i <= *tree_depth; ++i) {
-        size += i ? 2 << (i - 1) : 1;
-    }
-    *full_size = size;
+    *full_size = full_tree_size(*tree_depth);
+    int size = *full_size;
 
     queue* q = queue_init();
     queue_offer(q, m->root);
@@ -114,11 +117,13 @@ void printf_rd_tree(tree_map *map) {
         printf("\n");
     }
 
-    node * nd;
-    linkedlist_for_each(nd, list)
+    node * n, * head = list->first;
+    while (head)
     {
-        free(nd->data);
-        free(nd);
+        n = head->next;
+        free(head->data);
+        free(head);
+        head = n;
     }
     free(list);
 }

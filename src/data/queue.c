@@ -28,10 +28,12 @@ queue * queue_init_capacity(int capacity)
 void queue_destroy(queue * q)
 {
     linkedlist list = q->list;
-    node * n;
-    linkedlist_for_each(n, &list)
+    node * n, * head = list.first;
+    while (head)
     {
-        free(n);
+        n = head->next;
+        free(head);
+        head = n;
     }
     free(q);
 }

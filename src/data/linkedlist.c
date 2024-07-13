@@ -29,10 +29,12 @@ linkedlist * linkedlist_init_capacity(int capacity)
 
 void linkedlist_destroy(linkedlist * list)
 {
-    node * nd;
-    linkedlist_for_each(nd, list)
+    node * n, * head = list->first;
+    while (head)
     {
-        free(nd);
+        n = head->next;
+        free(head);
+        head = n;
     }
     free(list);
 }
