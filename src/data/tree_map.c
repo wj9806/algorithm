@@ -4,6 +4,13 @@
 
 #include "tree_map.h"
 #include "queue.h"
+#include <stdio.h>
+
+/* Returns the size of full binary tree */
+static int full_tree_size(int depth)
+{
+    return depth ? (2 << depth) - 1 : 0;
+}
 
 /**
  *       Left rotation around p
@@ -354,4 +361,71 @@ void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra)
 int tree_map_depth(tree_map * m)
 {
     return depth(m->root);
+}
+
+void node_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_size)
+{
+    *tree_depth = tree_map_depth(m);
+    *full_size = full_tree_size(*tree_depth);
+    int size = *full_size;
+
+    queue* q = queue_init();
+    queue_offer(q, m->root);
+    while (queue_size(q) > 0 && size--)
+    {
+        tree_node * n = queue_poll(q);
+
+        if (n)
+        {
+            struct node_ele * pn = malloc_type(struct node_ele);
+            pn->node = n;
+            pn->index = *full_size - size - 1;
+            linkedlist_add(list, pn);
+        }
+
+        queue_offer(q, n ? n->left : 0);
+        queue_offer(q, n ? n->right : 0);
+    }
+    queue_destroy(q);
+}
+
+static void print_spaces(int count) {
+    for (int i = 0; i < count; i++) {
+        printf("  ");
+    }
+}
+
+void tree_map_print(tree_map *map, printf_tree_node func)
+{
+    int full_size;
+    int depth;
+    linkedlist * list = linkedlist_init();
+    node_list(map, list, &depth, &full_size);
+
+    for (int i = depth, level = 0, all = 0; i > 0; --i, level++) {
+        int count = level ? 2 << (level - 1) : 1;
+        for (int j = 0; j < count; j++)
+        {
+            if (j)
+                print_spaces((2 << (depth - level)) -1);
+            else
+                print_spaces((2 << (depth - level - 1)));
+
+            if (((struct node_ele *) linkedlist_first(list))->index == all++)
+                func(((struct node_ele *)linkedlist_remove_first(list))->node);
+            else
+                func((tree_node*)0);
+        }
+        printf("\n");
+    }
+
+    node * n, * head = list->first;
+    while (head)
+    {
+        n = head->next;
+        free(head->data);
+        free(head);
+        head = n;
+    }
+    free(list);
 }

@@ -7,6 +7,16 @@
 
 #include "common.h"
 #include "function.h"
+#include "linkedlist.h"
+
+//red bg
+#define RED_BG      "\033[41m"
+//grep bg
+#define GRAY_BG     "\033[100m"
+//white font
+#define WHITE_FG    "\033[97m"
+//reset color
+#define RESET       "\033[0m"
 
 /* the tree node of color */
 typedef enum {
@@ -67,9 +77,26 @@ typedef enum {
  */
 void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra);
 
+struct node_ele
+{
+    int index;
+    tree_node * node;
+};
+
 /**
  * Return to the height of the red and black trees
  */
 int tree_map_depth(tree_map * m);
+
+/* get a list view of the tree node in this map. */
+void node_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_size);
+
+/**
+ * printf_tree_node function
+ */
+typedef void (*printf_tree_node)(tree_node * node);
+
+/* printf tree map */
+void tree_map_print(tree_map *map, printf_tree_node func);
 
 #endif //ALGORITHM_TREE_MAP_H
