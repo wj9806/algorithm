@@ -67,6 +67,13 @@ tree_map * tree_map_init(key_compare compare);
 /* put k v*/
 void * tree_map_put(tree_map * m, void * k, void * v);
 
+/* Removes all of the mappings from this map. */
+void tree_map_clear(tree_map * m, bool free_key, bool free_value);
+
+/* Returns the value to which the specified key is mapped,
+   or null if this map contains no mapping for the key. */
+void * tree_map_get(tree_map * m, void * k);
+
 typedef enum {
     PRE, IN, POST, LEVEL
 } traversal;

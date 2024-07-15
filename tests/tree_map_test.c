@@ -42,6 +42,17 @@ static void printk(void * k, void * v)
 
 void tree_map_put_test() {
     tree_map *map = tree_map_init(int_compare);
+    put(map, 1);
+    put(map, 2);
+    put(map, 3);
+    put(map, 4);
+    put(map, 5);
+    put(map, 6);
+    put(map, 7);
+    put(map, 8);
+    put(map, 9);
+    tree_map_clear(map, true, true);
+    put(map, 10);
     put(map, 11);
     put(map, 12);
     put(map, 13);
@@ -50,6 +61,14 @@ void tree_map_put_test() {
     put(map, 16);
     put(map, 17);
     put(map, 18);
+    put(map, 19);
+    put(map, 20);
+    put(map, 21);
+    put(map, 22);
+    put(map, 23);
+    put(map, 24);
+    put(map, 25);
+    put(map, 26);
 
     printf("---------------------LEVEL-------------------\n");
     tree_map_foreach(map, printk, LEVEL);

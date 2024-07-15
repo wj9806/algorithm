@@ -80,7 +80,7 @@ static inline int linkedlist_size(linkedlist * list)
  */
 static inline void * linkedlist_first(linkedlist * list)
 {
-    return list->first->data;
+    return list->first ? list->first->data : (void*)0;
 }
 
 /**
@@ -88,7 +88,7 @@ static inline void * linkedlist_first(linkedlist * list)
  */
 static inline void * linkedlist_last(linkedlist * list)
 {
-    return list->last->data;
+    return list->last ? list->last->data : (void*) 0;
 }
 
 /**

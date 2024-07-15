@@ -256,6 +256,25 @@ static int depth(tree_node * node)
     return left > right ? (left+1) : (right+1);
 }
 
+static tree_node * get_node(tree_map * m, void * k)
+{
+    if (!k) return (void*)0;
+
+    tree_node * n = m->root;
+    int cmp;
+    while (n)
+    {
+        cmp = m->compare(k, n->key);
+        if (cmp < 0)
+            n = n->left;
+        else if (cmp > 0)
+            n = n->right;
+        else
+            return n;
+    }
+    return (void*)0;
+}
+
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right, color color, void * key, void * value)
 {
     tree_node * n = malloc_type(tree_node);
@@ -338,6 +357,12 @@ void * tree_map_put(tree_map * m, void * k, void * v)
     return old_v;
 }
 
+void * tree_map_get(tree_map * m, void * k)
+{
+    tree_node * node = get_node(m, k);
+    return node ? node->value : (void*)0;
+}
+
 void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra)
 {
     if(!m->root) return;
@@ -411,10 +436,13 @@ void tree_map_print(tree_map *map, printf_tree_node func)
             else
                 print_spaces((2 << (depth - level - 1)));
 
-            if (((struct node_ele *) linkedlist_first(list))->index == all++)
-                func(((struct node_ele *)linkedlist_remove_first(list))->node);
-            else
-                func((tree_node*)0);
+            if (!linkedlist_is_empty(list))
+            {
+                if (((struct node_ele *) linkedlist_first(list))->index == all++)
+                    func(((struct node_ele *)linkedlist_remove_first(list))->node);
+                else
+                    func((tree_node*)0);
+            }
         }
         printf("\n");
     }
@@ -428,4 +456,32 @@ void tree_map_print(tree_map *map, printf_tree_node func)
         head = n;
     }
     free(list);
+}
+
+void clear_node(tree_node * node, bool free_key, bool free_value)
+{
+    if (node)
+    {
+        clear_node(node->left, free_key, free_value);
+        clear_node(node->right, free_key, free_value);
+
+        if (node->key && node->key != node->value)
+        {
+            if (free_key) free(node->key);
+        }
+
+        if (node->value)
+        {
+            if (free_value && (node->key != node->value || !free_key))
+                free(node->value);
+        }
+        free(node);
+    }
+}
+
+void tree_map_clear(tree_map * m, bool free_key, bool free_value)
+{
+    clear_node(m->root, free_key, free_value);
+    m->size = 0;
+    m->root = (tree_node *) 0;
 }
