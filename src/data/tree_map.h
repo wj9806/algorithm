@@ -61,11 +61,17 @@ static inline bool tree_map_is_empty(tree_map * m)
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right,
                              color color, void * key, void * value);
 
+/* destroy tree map */
+void tree_map_destroy(tree_map * m, bool free_key, bool free_value);
+
 /* init tree map*/
 tree_map * tree_map_init(key_compare compare);
 
 /* put k v*/
 void * tree_map_put(tree_map * m, void * k, void * v);
+
+/* Removes the mapping for this key from this TreeMap if present. */
+void * tree_map_remove(tree_map * m, void * k);
 
 /* Removes all of the mappings from this map. */
 void tree_map_clear(tree_map * m, bool free_key, bool free_value);
@@ -96,7 +102,7 @@ struct node_ele
 int tree_map_depth(tree_map * m);
 
 /* get a list view of the tree node in this map. */
-void node_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_size);
+void node_list(tree_map * m, linkedlist * list);
 
 /**
  * printf_tree_node function

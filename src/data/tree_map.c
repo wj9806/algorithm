@@ -275,6 +275,188 @@ static tree_node * get_node(tree_map * m, void * k)
     return (void*)0;
 }
 
+/**
+ * Returns the predecessor of the specified tree node
+ */
+static tree_node * predecessor(tree_node * n)
+{
+    if (!n)
+        return (tree_node*)0;
+    else if (n->left)
+    {
+        tree_node * node = n->left;
+        while (node->right)
+            node = node->right;
+        return node;
+    }
+    else
+    {
+        tree_node * p = n->parent;
+        tree_node * ch = n;
+
+        while (p && ch == p->left)
+        {
+            ch = p;
+            p = p->parent;
+        }
+        return p;
+    }
+}
+
+/**
+ * Returns the successor of the specified tree node
+ */
+static tree_node * successor(tree_node * n)
+{
+    if (!n)
+        return (tree_node*)0;
+    else if (n->right)
+    {
+        tree_node * node = n->right;
+        while (node->left)
+            node = node->left;
+        return node;
+    }
+    else
+    {
+        tree_node * p = n->parent;
+        tree_node * ch = n;
+
+        while (p && ch == p->right)
+        {
+            ch = p;
+            p = p->parent;
+        }
+        return p;
+    }
+}
+
+static void rebalanced_after_remove(tree_map * m, tree_node * node)
+{
+    while (node != m->root && color_of(node) == BLACK)
+    {
+        if (node == left_of(parent_of(node)))
+        {
+            tree_node * sib = right_of(parent_of(node));
+
+            if (color_of(sib) == RED)
+            {
+                set_color(sib, BLACK);
+                set_color(parent_of(sib), RED);
+                left_rotate(m, parent_of(sib));
+                sib = right_of(parent_of(node));
+            }
+            if (color_of(left_of(sib)) == BLACK && color_of(right_of(sib)) == BLACK)
+            {
+                set_color(sib, RED);
+                node = parent_of(node);
+            }
+            else
+            {
+                if (color_of(right_of(sib)) == BLACK)
+                {
+                    set_color(left_of(sib), BLACK);
+                    set_color(sib, RED);
+                    right_rotate(m, sib);
+                    sib = right_of(parent_of(node));
+                }
+                set_color(sib, color_of(parent_of(node)));
+                set_color(parent_of(node), BLACK);
+                set_color(right_of(sib), BLACK);
+                left_rotate(m, parent_of(node));
+                node = m->root;
+            }
+        }
+        else
+        {
+            //symmetric
+            tree_node * sib = left_of(parent_of(node));
+
+            if (color_of(sib) == RED)
+            {
+                set_color(sib, BLACK);
+                set_color(parent_of(sib), RED);
+                right_rotate(m, parent_of(node));
+                sib = left_of(parent_of(node));
+            }
+            if (color_of(left_of(sib)) == BLACK && color_of(right_of(sib)) == BLACK)
+            {
+                set_color(sib, RED);
+                node = parent_of(node);
+            }
+            else
+            {
+                if (color_of(left_of(sib)) == BLACK)
+                {
+                    set_color(right_of(sib), BLACK);
+                    set_color(sib, RED);
+                    left_rotate(m, sib);
+                    sib = left_of(parent_of(node));
+                }
+                set_color(sib, color_of(parent_of(node)));
+                set_color(parent_of(node), BLACK);
+                set_color(left_of(sib), BLACK);
+                right_rotate(m, parent_of(node));
+                node = m->root;
+            }
+        }
+    }
+    //node color is red
+    set_color(node, BLACK);
+}
+
+static void delete_node(tree_map * m, tree_node * node)
+{
+    m->size--;
+    //has 2 children
+    if (node->right && node->left)
+    {
+        tree_node * s = successor(node);
+        node->key = s->key;
+        node->value = s->value;
+        node = s;
+    }
+
+    tree_node * replacement = node->left ? node->left : node->right;
+    if (replacement)
+    {
+        // Link replacement to parent
+        replacement->parent = node->parent;
+        if (!node->parent)
+            m->root = replacement;
+        else if (node == node->parent->left)
+            node->parent->left = replacement;
+        else
+            node->parent->right = replacement;
+
+        node->parent = node->left = node->right = (void*)0;
+
+        if (node->color == BLACK)
+            rebalanced_after_remove(m, replacement);
+    }
+    else if (!node->parent)
+    {
+        //delete root node
+        m->root = (void*)0;
+    }
+    else
+    {
+        //leaf node
+        if (node->color == BLACK)
+            rebalanced_after_remove(m, node);
+        if (node->parent)
+        {
+            if (node == node->parent->left)
+                node->parent->left = (void*)0;
+            else if (node == node->parent->right)
+                node->parent->right = (void*)0;
+            node->parent = (void*)0;
+        }
+    }
+
+    free(node);
+}
+
 tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * right, color color, void * key, void * value)
 {
     tree_node * n = malloc_type(tree_node);
@@ -290,6 +472,13 @@ tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * r
     n->key = key;
     n->value = value;
     return n;
+}
+
+void tree_map_destroy(tree_map * m, bool free_key, bool free_value)
+{
+    tree_map_clear(m, free_key, free_value);
+    free(m);
+    m = (tree_map*)0;
 }
 
 tree_map * tree_map_init(key_compare compare)
@@ -357,6 +546,16 @@ void * tree_map_put(tree_map * m, void * k, void * v)
     return old_v;
 }
 
+void * tree_map_remove(tree_map * m, void * k)
+{
+    tree_node * node = get_node(m, k);
+    if (!node) return (void*) 0;
+
+    void * v = node->value;
+    delete_node(m, node);
+    return v;
+}
+
 void * tree_map_get(tree_map * m, void * k)
 {
     tree_node * node = get_node(m, k);
@@ -388,11 +587,11 @@ int tree_map_depth(tree_map * m)
     return depth(m->root);
 }
 
-void node_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_size)
+void node_list(tree_map * m, linkedlist * list)
 {
-    *tree_depth = tree_map_depth(m);
-    *full_size = full_tree_size(*tree_depth);
-    int size = *full_size;
+    int tree_depth = tree_map_depth(m);
+    int full_size = full_tree_size(tree_depth);
+    int size = full_size;
 
     queue* q = queue_init();
     queue_offer(q, m->root);
@@ -404,7 +603,7 @@ void node_list(tree_map * m, linkedlist * list, int * tree_depth, int * full_siz
         {
             struct node_ele * pn = malloc_type(struct node_ele);
             pn->node = n;
-            pn->index = *full_size - size - 1;
+            pn->index = full_size - size - 1;
             linkedlist_add(list, pn);
         }
 
@@ -422,10 +621,9 @@ static void print_spaces(int count) {
 
 void tree_map_print(tree_map *map, printf_tree_node func)
 {
-    int full_size;
-    int depth;
+    int depth = tree_map_depth(map);
     linkedlist * list = linkedlist_init();
-    node_list(map, list, &depth, &full_size);
+    node_list(map, list);
 
     for (int i = depth, level = 0, all = 0; i > 0; --i, level++) {
         int count = level ? 2 << (level - 1) : 1;
@@ -475,7 +673,9 @@ void clear_node(tree_node * node, bool free_key, bool free_value)
             if (free_value && (node->key != node->value || !free_key))
                 free(node->value);
         }
+        node->left = node->right = node->parent = (void*)0;
         free(node);
+        node = (void*)0;
     }
 }
 

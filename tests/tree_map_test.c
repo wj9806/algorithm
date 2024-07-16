@@ -4,11 +4,16 @@
 #include "tree_map.h"
 #include <stdio.h>
 
-#define put(m, i) \
+#define put(i) \
      printf("insert: %d\n", i);             \
      int in##i = i;     \
-     tree_map_put(m, &in##i, &in##i);  \
+     tree_map_put(map, &in##i, &in##i);  \
      tree_map_print(map, printf_int_node);
+
+#define remove(i) \
+    printf("remove: %d, ", i); \
+    printf("return:%d\n", *(int*)tree_map_remove(map, &in##i));\
+    tree_map_print(map, printf_int_node);
 
 static int int_compare(void * k1, void * k2)
 {
@@ -42,36 +47,24 @@ static void printk(void * k, void * v)
 
 void tree_map_put_test() {
     tree_map *map = tree_map_init(int_compare);
-    put(map, 1);
-    put(map, 2);
-    put(map, 3);
-    put(map, 4);
-    put(map, 5);
-    put(map, 6);
-    put(map, 7);
-    put(map, 8);
-    put(map, 9);
-    tree_map_clear(map, true, true);
-    put(map, 10);
-    put(map, 11);
-    put(map, 12);
-    put(map, 13);
-    put(map, 14);
-    put(map, 15);
-    put(map, 16);
-    put(map, 17);
-    put(map, 18);
-    put(map, 19);
-    put(map, 20);
-    put(map, 21);
-    put(map, 22);
-    put(map, 23);
-    put(map, 24);
-    put(map, 25);
-    put(map, 26);
+    put(1)
+    put(2)
+    put(3)
+    put(4)
+    put(5)
+    put(6)
+    put(7)
+    put(8)
+    put(9)
+
+    remove(4)
+
+    printf("%d\n", *(int*)tree_map_get(map, &in1));
 
     printf("---------------------LEVEL-------------------\n");
     tree_map_foreach(map, printk, LEVEL);
+
+    tree_map_destroy(map, true, true);
 }
 
 void tree_map_test()
