@@ -3,7 +3,7 @@
 //
 
 #include "tree_map.h"
-#include "queue.h"
+#include "linked_queue.h"
 #include <stdio.h>
 
 /* Returns the size of full binary tree */
@@ -150,17 +150,17 @@ static void level_order(tree_node * node, bi_consumer consumer)
 {
     if(node)
     {
-        queue* q = queue_init();
-        queue_offer(q, node);
-        while (queue_size(q) > 0)
+        linked_queue* q = linked_queue_init();
+        linked_queue_offer(q, node);
+        while (linked_queue_size(q) > 0)
         {
-            tree_node * n = queue_poll(q);
+            tree_node * n = linked_queue_poll(q);
             consumer(n->key, n->value);
 
-            if (n->left) queue_offer(q, n->left);
-            if (n->right) queue_offer(q, n->right);
+            if (n->left) linked_queue_offer(q, n->left);
+            if (n->right) linked_queue_offer(q, n->right);
         }
-        queue_destroy(q);
+        linked_queue_destroy(q);
     }
 }
 
@@ -599,11 +599,11 @@ void node_list(tree_map * m, linkedlist * list)
     int full_size = full_tree_size(tree_depth);
     int size = full_size;
 
-    queue* q = queue_init();
-    queue_offer(q, m->root);
-    while (queue_size(q) > 0 && size--)
+    linked_queue* q = linked_queue_init();
+    linked_queue_offer(q, m->root);
+    while (linked_queue_size(q) > 0 && size--)
     {
-        tree_node * n = queue_poll(q);
+        tree_node * n = linked_queue_poll(q);
 
         if (n)
         {
@@ -613,10 +613,10 @@ void node_list(tree_map * m, linkedlist * list)
             linkedlist_add(list, pn);
         }
 
-        queue_offer(q, n ? n->left : 0);
-        queue_offer(q, n ? n->right : 0);
+        linked_queue_offer(q, n ? n->left : 0);
+        linked_queue_offer(q, n ? n->right : 0);
     }
-    queue_destroy(q);
+    linked_queue_destroy(q);
 }
 
 static void print_spaces(int count) {

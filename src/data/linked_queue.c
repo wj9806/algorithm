@@ -2,21 +2,21 @@
 // Created by xsy on 2024/7/8.
 //
 
-#include "queue.h"
+#include "linked_queue.h"
 #include <stdlib.h>
 
-queue * queue_init()
+linked_queue * linked_queue_init()
 {
-    return queue_init_capacity(INT_MAX);
+    return linked_queue_init_capacity(INT_MAX);
 }
 
-queue * queue_init_capacity(int capacity)
+linked_queue * linked_queue_init_capacity(int capacity)
 {
-    queue * q = (queue *)malloc(sizeof(queue));
+    linked_queue * q = (linked_queue *)malloc(sizeof(linked_queue));
     if(!q)
     {
-        debug_error("Failed to create queue");
-        return (queue *) 0;
+        debug_error("Failed to create linked_queue");
+        return (linked_queue *) 0;
     }
 
     q->list.first = q->list.last = (node *)0;
@@ -25,7 +25,7 @@ queue * queue_init_capacity(int capacity)
     return q;
 }
 
-void queue_destroy(queue * q)
+void linked_queue_destroy(linked_queue * q)
 {
     linkedlist list = q->list;
     node * n, * head = list.first;
@@ -38,22 +38,22 @@ void queue_destroy(queue * q)
     free(q);
 }
 
-bool queue_offer(queue * q, void * data)
+bool linked_queue_offer(linked_queue * q, void * data)
 {
     return linkedlist_insert_last(&q->list, data);
 }
 
-void * queue_poll(queue * q)
+void * linked_queue_poll(linked_queue * q)
 {
     return linkedlist_remove_first(&q->list);
 }
 
-void * queue_peek(queue * q)
+void * linked_queue_peek(linked_queue * q)
 {
     return linkedlist_first(&q->list);
 }
 
-bool queue_contains(queue * q, void * data)
+bool linked_queue_contains(linked_queue * q, void * data)
 {
     return linkedlist_contains(&q->list, data);
 }
