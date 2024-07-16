@@ -80,6 +80,15 @@ void tree_map_clear(tree_map * m, bool free_key, bool free_value);
    or null if this map contains no mapping for the key. */
 void * tree_map_get(tree_map * m, void * k);
 
+/* Returns true if this tree map contains a mapping for the specified key. */
+bool tree_map_contains_key(tree_map * m, void * k);
+
+/* Returns the first (lowest) key currently in this map. */
+void * tree_map_first_key(tree_map * m);
+
+/* Returns the last (highest) key currently in this map. */
+void * tree_map_last_key(tree_map * m);
+
 typedef enum {
     PRE, IN, POST, LEVEL
 } traversal;
@@ -90,19 +99,10 @@ typedef enum {
  */
 void tree_map_foreach(tree_map * m, bi_consumer consumer, traversal tra);
 
-struct node_ele
-{
-    int index;
-    tree_node * node;
-};
-
 /**
  * Return to the height of the red and black trees
  */
 int tree_map_depth(tree_map * m);
-
-/* get a list view of the tree node in this map. */
-void node_list(tree_map * m, linkedlist * list);
 
 /**
  * printf_tree_node function

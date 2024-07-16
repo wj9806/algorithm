@@ -587,6 +587,12 @@ int tree_map_depth(tree_map * m)
     return depth(m->root);
 }
 
+struct node_ele
+{
+    tree_node * node;
+    int index;
+};
+
 void node_list(tree_map * m, linkedlist * list)
 {
     int tree_depth = tree_map_depth(m);
@@ -637,7 +643,11 @@ void tree_map_print(tree_map *map, printf_tree_node func)
             if (!linkedlist_is_empty(list))
             {
                 if (((struct node_ele *) linkedlist_first(list))->index == all++)
-                    func(((struct node_ele *)linkedlist_remove_first(list))->node);
+                {
+                    struct node_ele * ne = (struct node_ele *)linkedlist_remove_first(list);
+                    func(ne->node);
+                    free(ne);
+                }
                 else
                     func((tree_node*)0);
             }
@@ -684,4 +694,27 @@ void tree_map_clear(tree_map * m, bool free_key, bool free_value)
     clear_node(m->root, free_key, free_value);
     m->size = 0;
     m->root = (tree_node *) 0;
+}
+
+bool tree_map_contains_key(tree_map * m, void * k)
+{
+    return get_node(m, k) != (tree_node *)0;
+}
+
+void * tree_map_first_key(tree_map * m)
+{
+    tree_node * node = m->root;
+    if (node)
+        while (node->left)
+            node = node->left;
+    return node ? node->key : (void*) 0;
+}
+
+void * tree_map_last_key(tree_map * m)
+{
+    tree_node * node = m->root;
+    if (node)
+        while (node->right)
+            node = node->right;
+    return node ? node->key : (void*) 0;
 }
