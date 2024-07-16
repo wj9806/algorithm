@@ -4,7 +4,7 @@
 
 #include "hash_set.h"
 
-struct EMPTY_STRUCT {} S;
+static struct EMPTY_STRUCT {} S;
 static void * VALUE = &S;
 
 hash_set * hashset_init(long (*hash_code)(hash_table* h, void * key))

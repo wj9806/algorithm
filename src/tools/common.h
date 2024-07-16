@@ -46,9 +46,4 @@ void debug_print(int level, const char * file, const char * func, int line, cons
     }                       \
 }
 
-typedef struct {
-    void * key;
-    void * value;
-} map_entry;
-
 #endif //ALGORITHM_COMMON_H

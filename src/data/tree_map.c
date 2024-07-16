@@ -278,7 +278,7 @@ static tree_node * get_node(tree_map * m, void * k)
 /**
  * Returns the predecessor of the specified tree node
  */
-static tree_node * predecessor(tree_node * n)
+tree_node * tree_node_predecessor(tree_node * n)
 {
     if (!n)
         return (tree_node*)0;
@@ -306,7 +306,7 @@ static tree_node * predecessor(tree_node * n)
 /**
  * Returns the successor of the specified tree node
  */
-static tree_node * successor(tree_node * n)
+tree_node * tree_node_successor(tree_node * n)
 {
     if (!n)
         return (tree_node*)0;
@@ -411,7 +411,7 @@ static void delete_node(tree_map * m, tree_node * node)
     //has 2 children
     if (node->right && node->left)
     {
-        tree_node * s = successor(node);
+        tree_node * s = tree_node_successor(node);
         node->key = s->key;
         node->value = s->value;
         node = s;
@@ -701,20 +701,32 @@ bool tree_map_contains_key(tree_map * m, void * k)
     return get_node(m, k) != (tree_node *)0;
 }
 
-void * tree_map_first_key(tree_map * m)
+tree_node * tree_map_first_node(tree_map * m)
 {
     tree_node * node = m->root;
     if (node)
         while (node->left)
             node = node->left;
-    return node ? node->key : (void*) 0;
+    return node;
 }
 
-void * tree_map_last_key(tree_map * m)
+tree_node * tree_map_last_node(tree_map * m)
 {
     tree_node * node = m->root;
     if (node)
         while (node->right)
             node = node->right;
+    return node;
+}
+
+void * tree_map_first_key(tree_map * m)
+{
+    tree_node * node = tree_map_first_node(m);
+    return node ? node->key : (void*) 0;
+}
+
+void * tree_map_last_key(tree_map * m)
+{
+    tree_node * node = tree_map_last_node(m);
     return node ? node->key : (void*) 0;
 }
