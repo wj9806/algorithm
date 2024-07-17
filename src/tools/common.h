@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#define ELE void*
+
 #define malloc_type(TYPE) \
     (TYPE*)malloc(sizeof(TYPE))
 

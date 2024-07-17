@@ -8,6 +8,7 @@ void basetype_arraylist_test();
 void linkedlist_test();
 void hash_table_test();
 void tree_map_test();
+void priority_queue_test();
 
 int main()
 {
@@ -16,5 +17,6 @@ int main()
     linkedlist_test();
     hash_table_test();
     tree_map_test();
+    priority_queue_test();
     getchar();
 }

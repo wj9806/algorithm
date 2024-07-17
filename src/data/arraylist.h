@@ -10,8 +10,6 @@
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ support for struct~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-#define ELE void*
-
 typedef struct {
     /** the arraylist capacity */
     int capacity;

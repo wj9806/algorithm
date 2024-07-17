@@ -68,6 +68,6 @@ static inline bool tree_set_is_empty(tree_set * set)
 
 #define tree_set_foreach(set, data) \
     tree_node *node = tree_map_first_node((set)->m);\
-    for ((data) = node->key; node; node = tree_node_successor(node))
+    for ((data) = node->key; node; node = tree_node_successor(node), (data) = node ? node->key : (data))
 
 #endif //ALGORITHM_TREE_SET_H

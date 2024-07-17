@@ -14,9 +14,6 @@ arraylist * arraylist_init(int capacity)
         return (arraylist *) 0;
     }
 
-    list->capacity = capacity;
-    list->size = 0;
-
     list->data = malloc_size_type(capacity, ELE);
     if (!list->data) {
         debug_error("Failed to allocate data array");
@@ -24,6 +21,8 @@ arraylist * arraylist_init(int capacity)
         return (arraylist *) 0;
     }
 
+    list->capacity = capacity;
+    list->size = 0;
     return list;
 }
 
