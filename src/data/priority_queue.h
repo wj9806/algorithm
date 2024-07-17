@@ -6,11 +6,9 @@
 #define ALGORITHM_PRIORITY_QUEUE_H
 
 #include <stdbool.h>
+#include "common.h"
 
 #define E void*
-
-/* the priority queue elements priority */
-typedef int (*priority_comparator)(E e1, E e2);
 
 typedef struct {
     /** the arraylist capacity */
@@ -20,11 +18,11 @@ typedef struct {
     /** data array */
     E * data;
     /* priority queue elements comparator */
-    priority_comparator comparator;
+    compare comparator;
 } priority_queue;
 
 /* init priority_queue */
-priority_queue * priority_queue_init(int capacity, priority_comparator comparator);
+priority_queue * priority_queue_init(int capacity, compare comparator);
 
 /**
  * destroy the given priority_queue

@@ -11,9 +11,9 @@ typedef struct {
     hash_table * ht;
 } hash_set;
 
-hash_set * hashset_init(long (*hash_code)(hash_table* h, void * key));
+hash_set * hashset_init(hash_code hash_code);
 
-hash_set * hashset_init_size(long (*hash_code)(hash_table* h, void * key), int t_size);
+hash_set * hashset_init_size(hash_code hash_code, int t_size);
 
 /**
  * Adds the specified element to this set if it is not already present.

@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 void debug_print(int level, const char * file, const char * func, int line, const char * fmt, ...)
 {
@@ -45,4 +46,19 @@ void debug_print(int level, const char * file, const char * func, int line, cons
     //recycling va_list
     va_end(args);
 #endif
+}
+
+int int_compare(void * k1, void * k2)
+{
+    return *(int*)k1 - *(int*)k2;
+}
+
+long int_hash_code(void * key)
+{
+    return *(int*)key;
+}
+
+long void_hash_code(void * key)
+{
+    return (long)(uintptr_t)key;
 }

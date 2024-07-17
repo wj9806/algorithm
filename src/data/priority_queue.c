@@ -3,9 +3,8 @@
 //
 
 #include "priority_queue.h"
-#include "common.h"
 
-priority_queue * priority_queue_init(int capacity, priority_comparator comparator)
+priority_queue * priority_queue_init(int capacity, compare comparator)
 {
     priority_queue * q = malloc_type(priority_queue);
     if(!q)

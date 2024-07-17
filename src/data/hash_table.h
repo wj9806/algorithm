@@ -33,20 +33,16 @@ typedef struct hash_table {
     /* load factor */
     float load_factor;
     /* hash code function */
-    long (*hash_code)(struct hash_table* h, void * key);
+    hash_code hash_code;
     /* The next size value at which to resize (t_size * load factor). */
     int threshold;
 } hash_table;
 
-long int_hash_code(hash_table* h, void * key);
-
-long void_hash_code(hash_table* h, void * key);
-
 /* init hash table */
-hash_table * hashtable_init(long (*hash_code)(hash_table* h, void * key));
+hash_table * hashtable_init(hash_code hash_code);
 
 /* init hash table with table size */
-hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key), int t_size);
+hash_table * hashtable_init_size(hash_code hash_code, int t_size);
 
 /* destroy hash table */
 void hashtable_destroy(hash_table * h);

@@ -9,7 +9,7 @@
 static long hash(hash_table* h, void * key)
 {
     if(!key) return 0;
-    long sh = h->hash_code(h, key);
+    long sh = h->hash_code(key);
     return sh ^ (sh >> 16);
 }
 
@@ -167,22 +167,12 @@ static entry * remove_entry(hash_table * h, void * key)
     return node;
 }
 
-long int_hash_code(hash_table* h, void * key)
-{
-    return *(int*)key;
-}
-
-long void_hash_code(hash_table* h, void * key)
-{
-    return (long)(uintptr_t)key;
-}
-
-hash_table * hashtable_init(long (*hash_code)(hash_table* h, void * key))
+hash_table * hashtable_init(hash_code hash_code)
 {
     return hashtable_init_size(hash_code, INIT_TABLE_SIZE);
 }
 
-hash_table * hashtable_init_size(long (*hash_code)(hash_table* h, void * key),
+hash_table * hashtable_init_size(hash_code hash_code,
                                  int t_size)
 {
     hash_table* tab = malloc_type(hash_table);

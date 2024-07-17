@@ -7,12 +7,12 @@
 static struct EMPTY_STRUCT {} S;
 static void * VALUE = &S;
 
-hash_set * hashset_init(long (*hash_code)(hash_table* h, void * key))
+hash_set * hashset_init(hash_code hash_code)
 {
     return hashset_init_size(hash_code, INIT_TABLE_SIZE);
 }
 
-hash_set * hashset_init_size(long (*hash_code)(hash_table* h, void * key), int t_size)
+hash_set * hashset_init_size(hash_code hash_code, int t_size)
 {
     hash_set * set = malloc_type(hash_set);
     if (!set)

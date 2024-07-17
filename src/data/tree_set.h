@@ -16,7 +16,7 @@ typedef struct {
  * @param compare tree_map's key comparator
  * @return
  */
-tree_set * tree_set_init(key_compare compare);
+tree_set * tree_set_init(compare compare);
 
 /**
  * Adds the specified element to this set if it is not already present.

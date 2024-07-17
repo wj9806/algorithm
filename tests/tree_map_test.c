@@ -21,11 +21,6 @@
     printf("return:%d\n", *(int*)tree_map_remove(map, &in##i));\
     tree_map_print(map, printf_int_node);
 
-static int int_compare(void * k1, void * k2)
-{
-    return *(int*)k1 - *(int*)k2;
-}
-
 static void printf_int_node(tree_node * node)
 {
     if(node)

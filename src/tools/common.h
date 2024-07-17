@@ -48,4 +48,22 @@ void debug_print(int level, const char * file, const char * func, int line, cons
     }                       \
 }
 
+/**
+ * Returns a negative integer, zero, or a positive integer as k1 is less
+ * than, equal to, or greater than the k2.
+ */
+typedef int (*compare)(void * k1, void * k2);
+
+/* compare int */
+int int_compare(void * k1, void * k2);
+
+/* hash code function */
+typedef long (*hash_code)(void * key);
+
+/* compute the int hash code */
+long int_hash_code(void * key);
+
+/* compute the ptr hash code */
+long void_hash_code(void * key);
+
 #endif //ALGORITHM_COMMON_H

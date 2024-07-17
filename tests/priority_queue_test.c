@@ -4,11 +4,6 @@
 #include "priority_queue.h"
 #include <stdio.h>
 
-static int int_compare(void * k1, void * k2)
-{
-    return *(int*)k1 - *(int*)k2;
-}
-
 #define offer(e) \
     int i##e = e;\
     priority_queue_offer(q, &i##e);

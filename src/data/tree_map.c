@@ -481,7 +481,7 @@ void tree_map_destroy(tree_map * m, bool free_key, bool free_value)
     m = (tree_map*)0;
 }
 
-tree_map * tree_map_init(key_compare compare)
+tree_map * tree_map_init(compare compare)
 {
     if(!compare)
     {

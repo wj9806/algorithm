@@ -7,7 +7,7 @@
 static struct EMPTY_STRUCT {} S;
 static void * VALUE = &S;
 
-tree_set * tree_set_init(key_compare compare)
+tree_set * tree_set_init(compare compare)
 {
     tree_set * set = malloc_type(tree_set);
     if (!set)

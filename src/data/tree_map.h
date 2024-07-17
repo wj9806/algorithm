@@ -33,16 +33,10 @@ typedef struct tree_node {
     void * value;
 } tree_node;
 
-/**
- * Returns a negative integer, zero, or a positive integer as k1 is less
- * than, equal to, or greater than the k2.
- */
-typedef int (*key_compare)(void * k1, void * k2);
-
 typedef struct {
     tree_node * root;
     unsigned int size;
-    key_compare compare;
+    compare compare;
 } tree_map;
 
 /* Returns the tree map size */
@@ -65,7 +59,7 @@ tree_node * tree_node_create(tree_node * parent, tree_node * left, tree_node * r
 void tree_map_destroy(tree_map * m, bool free_key, bool free_value);
 
 /* init tree map*/
-tree_map * tree_map_init(key_compare compare);
+tree_map * tree_map_init(compare compare);
 
 /* put k v*/
 void * tree_map_put(tree_map * m, void * k, void * v);
