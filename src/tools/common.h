@@ -14,16 +14,16 @@
     (TYPE*)malloc(sizeof(TYPE))
 
 #define malloc_size_type(SIZE, TYPE) \
-    (TYPE*)malloc(SIZE * sizeof(TYPE))
+    (TYPE*)malloc((SIZE) * sizeof(TYPE))
 
 #define calloc_size_type(SIZE, TYPE) \
-    (TYPE*)calloc(SIZE, sizeof(TYPE))
+    (TYPE*)calloc((SIZE), sizeof(TYPE))
 
 #define realloc_type(BLOCK, TYPE) \
     (TYPE*)realloc(BLOCK, sizeof(TYPE))
 
 #define realloc_size_type(BLOCK, SIZE, TYPE) \
-    (TYPE*)realloc(BLOCK, SIZE * sizeof(TYPE))
+    (TYPE*)realloc(BLOCK, (SIZE) * sizeof(TYPE))
 
 #define DEBUG_STYLE_RED         "\033[31m"
 #define DEBUG_STYLE_YELLOW      "\033[33m"
