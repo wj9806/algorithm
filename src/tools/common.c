@@ -62,3 +62,9 @@ long void_hash_code(void * key)
 {
     return (long)(uintptr_t)key;
 }
+
+void default_free_func(void * ptr)
+{
+    if (ptr)
+        free(ptr);
+}

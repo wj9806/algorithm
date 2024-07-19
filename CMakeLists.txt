@@ -17,7 +17,7 @@ file(GLOB_RECURSE SOURCE_LIST
 
 add_definitions(-DEN_DEBUG)
 
-set(TEST_MODULE TEST_HASH_TABLE)
+set(TEST_MODULE TEST_B_TREE)
 
 option(${TEST_MODULE} "module should be tested" ON)
 

@@ -66,4 +66,10 @@ long int_hash_code(void * key);
 /* compute the ptr hash code */
 long void_hash_code(void * key);
 
+/* free mem function */
+typedef void (*free_func)(void * ptr);
+
+/* call free function */
+void default_free_func(void * ptr);
+
 #endif //ALGORITHM_COMMON_H

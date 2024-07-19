@@ -41,6 +41,10 @@ typedef struct {
     int min_key_count;
     /* max key count */
     int max_key_count;
+    /* key free function */
+    free_func key_free;
+    /* value free function */
+    free_func value_free;
 } b_tree;
 
 /**
@@ -49,7 +53,7 @@ typedef struct {
  * @param compare key compare function
  * @return
  */
-b_tree * btree_init(int t, compare compare);
+b_tree * btree_init(int t, compare compare, free_func key_free, free_func value_free);
 
 /**
  * Returns true if this b-tree contains the specified element.
@@ -58,5 +62,17 @@ bool b_tree_contains_key(b_tree * tree, void * key);
 
 /* put key */
 void * b_tree_put(b_tree * tree, void * key, void * value);
+
+/* clear b-tree */
+void b_tree_clear(b_tree * tree);
+
+/* destroy b-tree */
+void b_tree_destroy(b_tree * tree);
+
+#ifdef  TEST_B_TREE
+void b_tree_node_test();
+#else
+#define b_tree_node_test()
+#endif
 
 #endif //ALGORITHM_B_TREE_H
