@@ -69,10 +69,14 @@ void b_tree_clear(b_tree * tree);
 /* destroy b-tree */
 void b_tree_destroy(b_tree * tree);
 
+int b_tree_depth(b_tree * m);
+
 #ifdef  TEST_B_TREE
 void b_tree_node_test();
+void printf_b_node(b_node * node);
 #else
 #define b_tree_node_test()
+#define printf_node(n)
 #endif
 
 #endif //ALGORITHM_B_TREE_H
