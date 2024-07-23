@@ -69,6 +69,7 @@ void b_tree_clear(b_tree * tree);
 /* destroy b-tree */
 void b_tree_destroy(b_tree * tree);
 
+/* Returns the b-tree depth */
 int b_tree_depth(b_tree * m);
 
 #ifdef  TEST_B_TREE

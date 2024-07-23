@@ -164,6 +164,69 @@ static void * node_put(b_tree * tree, b_node * node, void * key, void * value, b
     return old_value;
 }
 
+static b_entry * remove_key(b_node * node, int index)
+{
+    b_entry * entry = node->entries[index];
+
+    size_t move_size = (--node->key_number - index) * sizeof(b_entry *);
+    if(move_size > 0)
+        memmove(&node->entries[index], &node->entries[index + 1], move_size);
+    return entry;
+}
+
+static b_entry * remove_leftmost_key(b_node * node)
+{
+    return remove_key(node, 0);
+}
+
+static b_entry * remove_rightmost_key(b_node * node)
+{
+    return remove_key(node, node->key_number - 1);
+}
+
+b_node * remove_child(b_node * node, int index)
+{
+    b_node * child = node->children[index];
+
+    size_t move_size = (node->key_number - index) * sizeof(b_node *);
+    if(move_size > 0)
+        memmove(&node->children[index], &node->children[index + 1], move_size);
+    node->children[node->key_number] = (b_node *)0;
+    return child;
+}
+
+b_node * remove_leftmost_child(b_node * node)
+{
+    return remove_child(node, 0);
+}
+
+b_node * remove_rightmost_child(b_node * node)
+{
+    return remove_child(node, node->key_number);
+}
+
+b_node * child_left_sibling(b_node * node, int index)
+{
+    return index > 0 ? node->children[index - 1] : (b_node*)0;
+}
+
+b_node * child_right_sibling(b_node * node, int index)
+{
+    return index == node->key_number ? (b_node*)0 : node->children[index + 1];
+}
+
+void move_to_target(b_node * src, b_node * target) {
+    int start = target->key_number;
+    if (!src->leaf) {
+        for (int i = 0; i <= src->key_number; i++) {
+            target->children[start + i] = src->children[i];
+        }
+    }
+    for (int i = 0; i < src->key_number; i++) {
+        target->entries[target->key_number++] = src->entries[i];
+    }
+}
+
 b_tree * btree_init(int t, compare compare, free_func key_free, free_func value_free)
 {
     if(t < 2)
