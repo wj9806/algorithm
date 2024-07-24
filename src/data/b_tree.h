@@ -63,6 +63,9 @@ bool b_tree_contains_key(b_tree * tree, void * key);
 /* put key */
 void * b_tree_put(b_tree * tree, void * key, void * value);
 
+/* remove key */
+void * b_tree_remove(b_tree * tree, void * key);
+
 /* clear b-tree */
 void b_tree_clear(b_tree * tree);
 
@@ -73,10 +76,8 @@ void b_tree_destroy(b_tree * tree);
 int b_tree_depth(b_tree * m);
 
 #ifdef  TEST_B_TREE
-void b_tree_node_test();
 void printf_b_node(b_node * node);
 #else
-#define b_tree_node_test()
 #define printf_node(n)
 #endif
 
