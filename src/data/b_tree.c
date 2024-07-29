@@ -7,7 +7,6 @@
 #include "b_tree.h"
 
 #define in_free(p) \
-    printf("free %p\n", p);            \
     free(p)
 
 static b_entry * b_entry_create(void * key, void * value)
@@ -32,7 +31,7 @@ static b_node * b_node_create(int t, compare compare)
         debug_error("create b_node failed");
         return (b_node *)0;
     }
-    b_entry** entries = malloc_size_type(2 * t, b_entry*);
+    b_entry** entries = calloc_size_type(2 * t - 1, b_entry*);
     if(!entries)
     {
         debug_error("create b_node entries failed");
@@ -40,7 +39,7 @@ static b_node * b_node_create(int t, compare compare)
         return (b_node *)0;
     }
 
-    b_node ** children = calloc_size_type(2 * t -1, b_node*);
+    b_node ** children = calloc_size_type(2 * t, b_node*);
     if(!children)
     {
         debug_error("create b_node children failed");
@@ -85,50 +84,54 @@ static void insert_entry(b_node * node, b_entry * entry, int index)
 static void insert_child(b_node * node, b_node * child, int index)
 {
     size_t move_size = (node->key_number - index) * sizeof(b_node*);
-    memmove(&node->children[index + 1], &node->children[index], move_size);
+    if (move_size > 0)
+        memmove(node->children + index + 1, node->children + index, move_size);
     node->children[index] = child;
 }
 
 /* *
- * split node
+ * split left
  *
  *        5                2|5
  *      /   \    ==>     /  |  \
  *   1|2|3   6          1   3   6
  * */
-static void split_node(b_tree * tree, b_node * node, b_node * parent, int index)
+static void split_node(b_tree * tree, b_node * left, b_node * parent, int index)
 {
-    int t = node->t;
+    int t = left->t;
     if(!parent)
     {
-        b_node * root = b_node_create(t, node->compare);
+        b_node * root = b_node_create(t, left->compare);
         if(!root) return;
 
         root->leaf = false;
-        insert_child(root, node, 0);
+        insert_child(root, left, 0);
         parent = tree->root = root;
     }
 
-    b_node * right = b_node_create(t, node->compare);
+    b_node * right = b_node_create(t, left->compare);
     if(!right) return;
-    right->leaf = node->leaf;
+    right->leaf = left->leaf;
 
     size_t move_size = (t - 1) * sizeof(b_entry *);
-    memmove(&right->entries[0], &node->entries[t], move_size);
+    memmove(&right->entries[0], &left->entries[t], move_size);
+    for (int i = t ; i < 2 * t -1; ++i) {
+        left->entries[i] = (b_entry*)0;
+    }
 
-    if(!node->leaf)
+    if(!left->leaf)
     {
         move_size = t * sizeof(b_node *);
-        memmove(&right->children, &node->children + t, move_size);
-        for (int i = t; i <= node->key_number; i++) {
-            node->children[i] = (b_node*)0;
+        memmove(right->children, left->children + t, move_size);
+        for (int i = t; i < left->key_number; i++) {
+            left->children[i] = (b_node*)0;
         }
     }
 
     right->key_number = t - 1;
-    node->key_number = t - 1;
+    left->key_number = t - 1;
 
-    b_entry * mid = node->entries[t - 1];
+    b_entry * mid = left->entries[t - 1];
     insert_entry(parent, mid, index);
 
     insert_child(parent, right, index + 1);
@@ -349,9 +352,9 @@ static b_entry * remove_entry(b_tree * tree, b_node * parent, b_node * node, int
             b_node * s = node->children[i+1];
             while (!s->leaf)
                 s = s->children[0];
-            e = s->entries[0];
-            node->entries[i] = e;
-            e = remove_entry(tree, node, node->children[i + 1], i + 1, e);
+            e = node->entries[i];
+            node->entries[i] = s->entries[0];
+            remove_entry(tree, node, node->children[i + 1], i + 1, s->entries[0]->key);
         }
     }
 
@@ -388,24 +391,29 @@ static void clear_b_node(b_node * node, free_func free_key, free_func free_value
                 {
                     clear_b_node(node->children[i], free_key, free_value);
                 }
+                node->children[i] = (void*)0;
             }
         }
 
 
         for (int i = 0; i < node->key_number; ++i) {
             b_entry * entry = node->entries[i];
-            debug_info("key:%d", *(int*)entry->key);
-            if(free_key || free_value) {
-                if (entry->key)
-                    if (free_key) free_key(entry->key);
+            if (entry)
+            {
+                debug_info("key:%d", *(int*)entry->key);
+                if(free_key || free_value) {
+                    if (entry->key)
+                        if (free_key) free_key(entry->key);
 
-                if (entry->value) {
-                    if (free_value) free_value(entry->value);
+                    if (entry->value) {
+                        if (free_value) free_value(entry->value);
+                    }
                 }
+                in_free(entry);
             }
-            in_free(entry);
         }
 
+        printf("node: %p\n", node);
         in_free(node->entries);
         in_free(node->children);
         in_free(node);
@@ -446,7 +454,6 @@ int b_tree_depth(b_tree * m)
 
 #ifdef  TEST_B_TREE
 
-#include <stdio.h>
 #include "linked_queue.h"
 
 struct b_temp_node {
@@ -460,7 +467,7 @@ void printf_b_node(b_node * node)
     {
         linked_queue * q = linked_queue_init();
 
-        struct b_temp_node * root_node = malloc_type(struct b_temp_node);
+        struct b_temp_node * root_node = calloc_size_type(1, struct b_temp_node);
         root_node->node = node;
         root_node->last = true;
         linked_queue_offer(q, root_node);
@@ -497,7 +504,7 @@ void printf_b_node(b_node * node)
                     }
                 }
             }
-            //in_free(temp_node);
+            in_free(temp_node);
         }
         linked_queue_destroy(q);
     }

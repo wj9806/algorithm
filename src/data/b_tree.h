@@ -14,12 +14,12 @@ typedef struct {
 } b_entry;
 
 typedef struct b_node{
+    /* keywords number */
+    int key_number;
     /* entries in the node */
     b_entry ** entries;
     /* node's children */
     struct b_node ** children;
-    /* keywords number */
-    int key_number;
     /* is leaf */
     bool leaf;
     /* The minimum degree of the tree */

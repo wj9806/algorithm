@@ -12,8 +12,7 @@
     printf("depth: %d\n", b_tree_depth(tree));
 
 #define b_remove(i) \
-    printf("remove %d -----------------\n", i); \
-    printf("%d\n", *(int*)b_tree_remove(tree, &t##i)); \
+    printf("remove---%d\n", *(int*)b_tree_remove(tree, &t##i)); \
     printf_b_node(tree->root);
 
 void b_tree_put_testing()
@@ -28,10 +27,6 @@ void b_tree_put_testing()
     b_put(5)
     b_put(6)
     b_put(7)
-    b_put(8)
-    b_put(9)
-    b_put(10)
-    b_put(11)
 
     b_tree_destroy(tree);
 }
@@ -48,7 +43,10 @@ void b_tree_remove_testing()
     b_put(5)
     b_put(6)
 
+    printf("remove %d -----------------\n", 2);
     b_remove(2)
+
+    b_tree_destroy(tree);
 }
 
 void b_tree_test()
