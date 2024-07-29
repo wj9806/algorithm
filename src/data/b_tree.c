@@ -56,21 +56,36 @@ static b_node * b_node_create(int t, compare compare)
     return n;
 }
 
-static b_node * get_node(b_node * node, void * key)
+static bool found(b_node * node, int i, int cmp)
 {
-    int i = 0;
-    int cmp;
+    return i < node->key_number && cmp == 0;
+}
+
+static b_entry * get_entry(b_node * node, void * key)
+{
+    int i = 0, cmp;
     while (i < node->key_number)
     {
-        if((cmp = node->compare(node->entries[i]->key, key)) == 0)
-            return node;
-        else if (cmp > 0)
+        if((cmp = node->compare(node->entries[i]->key, key)) >= 0)
             break;
         i++;
     }
-    if(node->leaf)
-        return (b_node *)0;
-    return get_node(node->children[i], key);
+
+    b_entry * e = (b_entry *)0;
+    if (node->leaf)
+    {
+        if (!found(node, i, cmp))
+            return e;
+        else
+            return node->entries[i];
+    }
+    else
+    {
+        if (!found(node, i, cmp))
+            return get_entry(node->children[i], key);
+        else
+            return node->entries[i];
+    }
 }
 
 static void insert_entry(b_node * node, b_entry * entry, int index)
@@ -137,18 +152,18 @@ static void split_node(b_tree * tree, b_node * left, b_node * parent, int index)
     insert_child(parent, right, index + 1);
 }
 
-static void * node_put(b_tree * tree, b_node * node, void * key, void * value, b_node * parent, int index)
+static b_entry * node_put(b_tree * tree, b_node * node, void * key, void * value, b_node * parent, int index)
 {
     int i = 0;
     int cmp;
-    void * old_value = (void *)0;
+    b_entry * old_entry = (void *)0;
     while (i < node->key_number)
     {
         if((cmp = node->compare(node->entries[i]->key, key)) == 0)
         {
-            old_value = node->entries[i]->value;
-            node->entries[i]->value = value;
-            return old_value;
+            //find
+            old_entry = node->entries[i];
+            return old_entry;
         }
         else if (cmp > 0)
             break;
@@ -166,12 +181,12 @@ static void * node_put(b_tree * tree, b_node * node, void * key, void * value, b
     }
     else
         //insert into children
-        old_value = node_put(tree, node->children[i], key, value, node, i);
+        old_entry = node_put(tree, node->children[i], key, value, node, i);
     if(node->key_number == tree->max_key_count)
     {
         split_node(tree, node, parent, index);
     }
-    return old_value;
+    return old_entry;
 }
 
 static b_entry * remove_key(b_node * node, int index)
@@ -263,24 +278,42 @@ b_tree * btree_init(int t, compare compare, free_func key_free, free_func value_
 
 bool b_tree_contains_key(b_tree * tree, void * key)
 {
-    return get_node(tree->root, key) != (b_node*)0;
+    return get_entry(tree->root, key) != (b_entry *)0;
 }
 
 void * b_tree_put(b_tree * tree, void * key, void * value)
 {
     if(!tree->root)
         tree->root = b_node_create(tree->t, tree->compare);
-    return node_put(tree, tree->root, key, value, (b_node*)0, 0);
-}
+    b_entry * old_entry = node_put(tree, tree->root, key, value, (b_node*)0, 0);
 
-static bool found(b_node * node, int i, int cmp)
-{
-    return i < node->key_number && cmp == 0;
+    void * old_value = (void *)0;
+    if (old_entry)
+    {
+        old_value = old_entry->value;
+        old_entry->value = value;
+    }
+    else
+        tree->size++;
+    return old_value;
 }
 
 static void rebalanced(b_tree * tree, b_node * parent, b_node * x, int i)
 {
-    if(x == tree->root) return;
+    if(x == tree->root)
+    {
+        //should reset root node
+        if (tree->root->key_number == 0 && tree->root->children[0])
+        {
+            b_node * old_root = tree->root;
+            tree->root = tree->root->children[0];
+
+            in_free(old_root->entries);
+            in_free(old_root->children);
+            in_free(old_root);
+        }
+        return;
+    }
     b_node * left = child_left_sibling(parent, i);
     b_node * right = child_right_sibling(parent, i);
 
@@ -309,13 +342,21 @@ static void rebalanced(b_tree * tree, b_node * parent, b_node * x, int i)
     }
 
     if (left != (b_node *)0) {
-        remove_child(parent, i);
+        b_node * cn = remove_child(parent, i);
         insert_entry(left, remove_key(parent, i - 1), left->key_number);
         move_to_target(x, left);
+
+        in_free(cn->entries);
+        in_free(cn->children);
+        in_free(cn);
     } else {
-        remove_child(parent, i + 1);
+        b_node * cn = remove_child(parent, i + 1);
         insert_entry(x, remove_key(parent, i), x->key_number);
         move_to_target(x, right);
+
+        in_free(cn->entries);
+        in_free(cn->children);
+        in_free(cn);
     }
 }
 
@@ -374,7 +415,18 @@ void * b_tree_remove(b_tree * tree, void * key)
     {
         void * data = entry->value;
         in_free(entry);
+        tree->size--;
         return data;
+    }
+    return (void*)0;
+}
+
+void * b_tree_get(b_tree * tree, void * key)
+{
+    b_entry * entry = get_entry(tree->root, key);
+    if (entry)
+    {
+        return entry->value;
     }
     return (void*)0;
 }
@@ -400,7 +452,7 @@ static void clear_b_node(b_node * node, free_func free_key, free_func free_value
             b_entry * entry = node->entries[i];
             if (entry)
             {
-                debug_info("key:%d", *(int*)entry->key);
+                //debug_info("key:%d", *(int*)entry->key);
                 if(free_key || free_value) {
                     if (entry->key)
                         if (free_key) free_key(entry->key);
@@ -413,7 +465,6 @@ static void clear_b_node(b_node * node, free_func free_key, free_func free_value
             }
         }
 
-        printf("node: %p\n", node);
         in_free(node->entries);
         in_free(node->children);
         in_free(node);
@@ -448,6 +499,46 @@ int b_tree_depth(b_tree * m)
     }
 
     return d;
+}
+
+static void level_order(b_node * node, bi_consumer consumer)
+{
+
+}
+
+static void pre_order(b_node * node, bi_consumer consumer)
+{
+
+}
+
+static void post_order(b_node * node, bi_consumer consumer)
+{
+
+}
+
+static void in_order(b_node * node, bi_consumer consumer)
+{
+
+}
+
+void b_tree_foreach(b_tree * m, bi_consumer consumer, traversal tra)
+{
+    if(!m->root) return;
+
+    switch (tra) {
+        case LEVEL:
+            level_order(m->root, consumer);
+            break;
+        case PRE:
+            pre_order(m->root, consumer);
+            break;
+        case POST:
+            post_order(m->root, consumer);
+            break;
+        case IN:
+        default:
+            in_order(m->root, consumer);
+    }
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ b-tree test ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

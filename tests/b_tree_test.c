@@ -28,6 +28,13 @@ void b_tree_put_testing()
     b_put(6)
     b_put(7)
 
+    printf("t1=%d\n", *(int*)b_tree_get(tree, &t1));
+    printf("t2=%d\n", *(int*)b_tree_get(tree, &t2));
+    printf("t3=%d\n", *(int*)b_tree_get(tree, &t3));
+    printf("t4=%d\n", *(int*)b_tree_get(tree, &t4));
+    printf("t5=%d\n", *(int*)b_tree_get(tree, &t5));
+    printf("t6=%d\n", *(int*)b_tree_get(tree, &t6));
+
     b_tree_destroy(tree);
 }
 
@@ -42,9 +49,31 @@ void b_tree_remove_testing()
     b_put(4)
     b_put(5)
     b_put(6)
+    b_put(7)
+    b_put(8)
+    b_put(9)
+    b_put(10)
+    b_put(11)
 
-    printf("remove %d -----------------\n", 2);
+    printf("~~~~~~~~~~%d~~~~~~~~~~~~\n", b_tree_size(tree));
+
+    b_remove(11)
+    b_remove(10)
+    b_remove(9)
+    b_remove(8)
+    b_remove(7)
+    b_remove(6)
+    b_remove(5)
+    b_remove(4)
+    b_remove(3)
     b_remove(2)
+    b_remove(1)
+    printf("~~~~~~~~~~%d~~~~~~~~~~~~\n", b_tree_size(tree));
+
+    b_put(12)
+    b_put(22)
+    b_put(13)
+    printf("~~~~~~~~~~%d~~~~~~~~~~~~\n", b_tree_size(tree));
 
     b_tree_destroy(tree);
 }

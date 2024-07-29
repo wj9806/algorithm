@@ -101,10 +101,6 @@ tree_node * tree_node_predecessor(tree_node * n);
  */
 tree_node * tree_node_successor(tree_node * n);
 
-typedef enum {
-    PRE, IN, POST, LEVEL
-} traversal;
-
 /**
  * Performs the given action for each entry in this map until all entries have been processed
  * @param preorder traversal, inorder traversal, postorder traversal, level order traversal

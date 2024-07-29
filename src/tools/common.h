@@ -48,6 +48,10 @@ void debug_print(int level, const char * file, const char * func, int line, cons
     }                       \
 }
 
+typedef enum {
+    PRE, IN, POST, LEVEL
+} traversal;
+
 /**
  * Returns a negative integer, zero, or a positive integer as k1 is less
  * than, equal to, or greater than the k2.

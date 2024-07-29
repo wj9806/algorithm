@@ -6,6 +6,7 @@
 #define ALGORITHM_B_TREE_H
 
 #include "common.h"
+#include "function.h"
 
 /* b_tree element */
 typedef struct {
@@ -66,6 +67,10 @@ void * b_tree_put(b_tree * tree, void * key, void * value);
 /* remove key */
 void * b_tree_remove(b_tree * tree, void * key);
 
+/* Returns the value to which the specified key is mapped,
+   or null if this map contains no mapping for the key. */
+void * b_tree_get(b_tree * tree, void * key);
+
 /* clear b-tree */
 void b_tree_clear(b_tree * tree);
 
@@ -74,6 +79,24 @@ void b_tree_destroy(b_tree * tree);
 
 /* Returns the b-tree depth */
 int b_tree_depth(b_tree * m);
+
+/* Returns b-tree size */
+static inline int b_tree_size(b_tree * tree)
+{
+    return tree->size;
+}
+
+/* Returns the b-tree is empty */
+static inline bool b_tree_is_empty(b_tree * tree)
+{
+    return tree->size == 0;
+}
+
+/**
+ * Performs the given action for each entry in this tree until all entries have been processed
+ * @param preorder traversal, inorder traversal, postorder traversal, level order traversal
+ */
+void b_tree_foreach(b_tree * m, bi_consumer consumer, traversal tra);
 
 #ifdef  TEST_B_TREE
 void printf_b_node(b_node * node);
