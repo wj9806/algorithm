@@ -98,10 +98,4 @@ static inline bool b_tree_is_empty(b_tree * tree)
  */
 void b_tree_foreach(b_tree * m, bi_consumer consumer, traversal tra);
 
-#ifdef  TEST_B_TREE
-void printf_b_node(b_node * node);
-#else
-#define printf_node(n)
-#endif
-
 #endif //ALGORITHM_B_TREE_H

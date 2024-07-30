@@ -5,6 +5,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include "b_tree.h"
+#include "linked_queue.h"
 
 #define in_free(p) \
     free(p)
@@ -503,22 +504,96 @@ int b_tree_depth(b_tree * m)
 
 static void level_order(b_node * node, bi_consumer consumer)
 {
+    if(node)
+    {
+        linked_queue * q = linked_queue_init();
+        linked_queue_offer(q, node);
+        while (linked_queue_size(q) > 0)
+        {
+            b_node * n = linked_queue_poll(q);
 
+            for (int i = 0; i < n->key_number; ++i) {
+                consumer(n->entries[i]->key, n->entries[i]->value);
+            }
+
+            if (!n->leaf) {
+                for (int i = 0; i < 2 * n->t - 1; ++i) {
+                    if (n->children[i]) {
+                        linked_queue_offer(q, n->children[i]);
+                    }
+                }
+            }
+        }
+        linked_queue_destroy(q);
+    }
 }
 
-static void pre_order(b_node * node, bi_consumer consumer)
+static void pre_order(b_node * n, bi_consumer consumer)
 {
+    if(n)
+    {
+        for (int i = 0; i < n->key_number; ++i)
+            consumer(n->entries[i]->key, n->entries[i]->value);
 
+        if (!n->leaf) {
+            for (int i = 0; i < 2 * n->t - 1; ++i) {
+                if (n->children[i]) {
+                    pre_order(n->children[i], consumer);
+                }
+            }
+        }
+    }
 }
 
-static void post_order(b_node * node, bi_consumer consumer)
+static void post_order(b_node * n, bi_consumer consumer)
 {
+    if(n)
+    {
+        if (!n->leaf) {
+            for (int i = 0; i < 2 * n->t - 1; ++i) {
+                if (n->children[i]) {
+                    post_order(n->children[i], consumer);
+                }
+            }
+        }
 
+        for (int i = 0; i < n->key_number; ++i)
+            consumer(n->entries[i]->key, n->entries[i]->value);
+    }
 }
 
-static void in_order(b_node * node, bi_consumer consumer)
+static void in_order(b_node * n, bi_consumer consumer)
 {
+    if(n)
+    {
+        if (!n->leaf) {
+            int i, j = 0;
+            for (i = 0; i < 2 * n->t - 1; ++i) {
+                if (n->children[i]) {
+                    b_node * child = n->children[i];
+                    if (n->compare(child->entries[0]->key, n->entries[j]->key) > 0)
+                        break;
+                    else
+                        in_order(child, consumer);
+                }
+            }
 
+            for (; j < n->key_number; ++j)
+            {
+                b_entry * cur = n->entries[j];
+                if (n->compare(n->children[i]->entries[0]->key, cur->key) > 0)
+                    consumer(cur->key, cur->value);
+                else
+                    break;
+            }
+            in_order(n->children[i], consumer);
+        }
+        else
+        {
+            for (int i = 0; i < n->key_number; ++i)
+                consumer(n->entries[i]->key, n->entries[i]->value);
+        }
+    }
 }
 
 void b_tree_foreach(b_tree * m, bi_consumer consumer, traversal tra)
@@ -540,64 +615,3 @@ void b_tree_foreach(b_tree * m, bi_consumer consumer, traversal tra)
             in_order(m->root, consumer);
     }
 }
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ b-tree test ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-#ifdef  TEST_B_TREE
-
-#include "linked_queue.h"
-
-struct b_temp_node {
-    bool last;
-    b_node * node;
-};
-
-void printf_b_node(b_node * node)
-{
-    if(node)
-    {
-        linked_queue * q = linked_queue_init();
-
-        struct b_temp_node * root_node = calloc_size_type(1, struct b_temp_node);
-        root_node->node = node;
-        root_node->last = true;
-        linked_queue_offer(q, root_node);
-
-        while (linked_queue_size(q) > 0)
-        {
-            struct b_temp_node * temp_node = linked_queue_poll(q);
-            b_node * n = temp_node->node;
-
-            for (int i = 0; i < n->key_number; ++i) {
-                printf("%d", *(int*)n->entries[i]->key);
-                if (i < n->key_number - 1)
-                    printf("-");
-            }
-
-            if (temp_node->last)
-                printf("\n");
-            else
-                printf(", ");
-
-            if (!n->leaf) {
-                for (int i = 0; i < 2 * n->t - 1; ++i) {
-                    if (n->children[i]) {
-                        struct b_temp_node *t_node = malloc_type(struct b_temp_node);
-                        t_node->node = n->children[i];
-
-                        if ((i == 2 * n->t - 2 || !n->children[i + 1])
-                                && temp_node->last)
-                            t_node->last = true;
-                        else
-                            t_node->last = false;
-
-                        linked_queue_offer(q, t_node);
-                    }
-                }
-            }
-            in_free(temp_node);
-        }
-        linked_queue_destroy(q);
-    }
-}
-#endif

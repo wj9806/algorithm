@@ -48,6 +48,10 @@ void debug_print(int level, const char * file, const char * func, int line, cons
     }                       \
 }
 
+/**
+ * tree traversal:
+ *  preorder traversal, inorder traversal, postorder traversal, level order traversal
+ */
 typedef enum {
     PRE, IN, POST, LEVEL
 } traversal;
