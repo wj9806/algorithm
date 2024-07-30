@@ -1,0 +1,12 @@
+//
+// Created by xsy on 2024/7/30.
+//
+
+#ifndef ALGORITHM_SORT_H
+#define ALGORITHM_SORT_H
+
+#include "common.h"
+
+void bubble_sort(void* data[], int arr_len, compare cp, bool nature_sort);
+
+#endif //ALGORITHM_SORT_H

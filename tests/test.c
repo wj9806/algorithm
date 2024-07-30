@@ -10,6 +10,7 @@ void hash_table_test();
 void tree_map_test();
 void priority_queue_test();
 void b_tree_test();
+void sort_test();
 
 int main()
 {
@@ -20,5 +21,6 @@ int main()
     tree_map_test();
     priority_queue_test();
     b_tree_test();
+    sort_test();
     getchar();
 }

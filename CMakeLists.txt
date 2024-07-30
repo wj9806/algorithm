@@ -7,17 +7,19 @@ include_directories(
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_SOURCE_DIR}/src/data
         ${PROJECT_SOURCE_DIR}/src/tools
+        ${PROJECT_SOURCE_DIR}/src/sort
 )
 
 file(GLOB_RECURSE SOURCE_LIST
         "tests/*.c"
         "src/data/*.c"
         "src/tools/*.c"
+        "src/sort/*.c"
 )
 
 add_definitions(-DEN_DEBUG)
 
-set(TEST_MODULE TEST_B_TREE)
+set(TEST_MODULE TEST_SORT)
 
 option(${TEST_MODULE} "module should be tested" ON)
 
