@@ -56,3 +56,44 @@ void selection_sort(void* data[], int arr_len, compare cp, bool nature_sort)
     }
 }
 
+static void heapify(void* data[], int n, int i, compare cp)
+{
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if(left < n && cp(data[left], data[largest]) > 0)
+        largest = left;
+
+    if(right < n && cp(data[right], data[largest]) > 0)
+        largest = right;
+
+    if(largest != i)
+    {
+        swap(data, i, largest);
+        heapify(data, n, largest, cp);
+    }
+}
+
+static void build_heap(void* data[], int n, compare cp)
+{
+    for(int i = n / 2 - 1; i >= 0; i--)
+        heapify(data, n, i, cp);
+}
+
+void heap_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    build_heap(data, arr_len, cp);
+
+    for(int i = arr_len - 1; i > 0; i--)
+    {
+        swap(data, 0, i);
+        heapify(data, i, 0, cp);
+    }
+
+    if(!nature_sort)
+    {
+        for (int i = 0; i < arr_len / 2; i++)
+            swap(data, i, arr_len - 1 - i);
+    }
+}

@@ -6,36 +6,36 @@
 
 static void* sort_arr[10];
 
-#define set(index, i) \
+#define __set(index, i) \
     sort_arr[index] = &int##i
 
-#define add(index,i) \
+#define __add(index,i) \
     int int##i = i; \
-    set(index, i)
+    __set(index, i)
 
-#define init_arr \
-        add(0, 8);\
-        add(1, 5);\
-        add(2, 3);\
-        add(3, 7);\
-        add(4, 9);\
-        add(5, 1);\
-        add(6, 0);\
-        add(7, 2);\
-        add(8, 4);\
-        add(9, 6);
+#define __init_arr \
+        __add(0, 8);\
+        __add(1, 5);\
+        __add(2, 3);\
+        __add(3, 7);\
+        __add(4, 9);\
+        __add(5, 1);\
+        __add(6, 0);\
+        __add(7, 2);\
+        __add(8, 4);\
+        __add(9, 6);
 
-#define reset_arr \
-        set(0, 8);\
-        set(1, 5);\
-        set(2, 3);\
-        set(3, 7);\
-        set(4, 9);\
-        set(5, 1);\
-        set(6, 0);\
-        set(7, 2);\
-        set(8, 4);\
-        set(9, 6);
+#define __reset_arr \
+        __set(0, 8);\
+        __set(1, 5);\
+        __set(2, 3);\
+        __set(3, 7);\
+        __set(4, 9);\
+        __set(5, 1);\
+        __set(6, 0);\
+        __set(7, 2);\
+        __set(8, 4);\
+        __set(9, 6);
 
 static void print_arr()
 {
@@ -45,27 +45,18 @@ static void print_arr()
     printf("\n");
 }
 
-static void bubble_test()
-{
-    printf("bubble_sort: ");
-    bubble_sort(sort_arr, 10, int_compare, false);
-    print_arr();
-}
-
-static void selection_test()
-{
-    printf("selection_sort: ");
-    selection_sort(sort_arr, 10, int_compare, true);
-    print_arr();
-}
+#define _call_sort(_func_, nature) \
+    printf("%s: ", #_func_);\
+    _func_(sort_arr, 10, int_compare, nature);\
+    print_arr();\
+    __reset_arr
 
 void sort_test()
 {
 #ifdef TEST_SORT
-    init_arr
-    bubble_test();
-    reset_arr
-    selection_test();
-    reset_arr
+    __init_arr
+    _call_sort(bubble_sort, true);
+    _call_sort(selection_sort, true);
+    _call_sort(heap_sort, false);
 #endif
 }

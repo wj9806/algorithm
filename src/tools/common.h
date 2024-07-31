@@ -56,11 +56,17 @@ typedef enum {
     PRE, IN, POST, LEVEL
 } traversal;
 
+
 /**
  * Returns a negative integer, zero, or a positive integer as k1 is less
  * than, equal to, or greater than the k2.
  */
 typedef int (*compare)(void * k1, void * k2);
+
+/**
+ * Sort function
+ */
+typedef void (*sort_func)(void* data[], int arr_len, compare cp, bool nature_sort);
 
 /* compare int */
 int int_compare(void * k1, void * k2);

@@ -11,4 +11,6 @@ void bubble_sort(void* data[], int arr_len, compare cp, bool nature_sort);
 
 void selection_sort(void* data[], int arr_len, compare cp, bool nature_sort);
 
+void heap_sort(void* data[], int arr_len, compare cp, bool nature_sort);
+
 #endif //ALGORITHM_SORT_H
