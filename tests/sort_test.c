@@ -47,7 +47,15 @@ static void print_arr()
 
 static void bubble_test()
 {
+    printf("bubble_sort: ");
     bubble_sort(sort_arr, 10, int_compare, false);
+    print_arr();
+}
+
+static void selection_test()
+{
+    printf("selection_sort: ");
+    selection_sort(sort_arr, 10, int_compare, true);
     print_arr();
 }
 
@@ -56,6 +64,8 @@ void sort_test()
 #ifdef TEST_SORT
     init_arr
     bubble_test();
+    reset_arr
+    selection_test();
     reset_arr
 #endif
 }
