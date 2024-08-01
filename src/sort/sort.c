@@ -123,3 +123,33 @@ void insertion_sort(void* data[], int arr_len, compare cp, bool nature_sort)
             data[i + 1] = t;
     }
 }
+
+void shell_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    for (int gap = arr_len >> 1; gap >= 1; gap = gap >> 1)
+    {
+        for (int low = gap; low < arr_len; ++low)
+        {
+            void * t = data[low];
+            int i = low - gap;
+            if(nature_sort) {
+                while (i >= 0 && cp(t, data[i]) < 0)
+                {
+                    data[i + gap] = data[i];
+                    i -= gap;
+                }
+            }
+            else
+            {
+                while (i >= 0 && cp(t, data[i]) > 0)
+                {
+                    data[i + gap] = data[i];
+                    i -= gap;
+                }
+            }
+
+            if(i != low - gap)
+                data[i + gap] = t;
+        }
+    }
+}
