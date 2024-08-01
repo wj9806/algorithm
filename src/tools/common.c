@@ -48,6 +48,23 @@ void debug_print(int level, const char * file, const char * func, int line, cons
 #endif
 }
 
+bool is_ordered(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    for (int i = 0; i < arr_len - 1; ++i) {
+        if (nature_sort)
+        {
+            if (cp(data[i], data[i + 1]) > 0)
+                return false;
+        }
+        else
+        {
+            if (cp(data[i], data[i + 1]) < 0)
+                return false;
+        }
+    }
+    return true;
+}
+
 int int_compare(void * k1, void * k2)
 {
     return *(int*)k1 - *(int*)k2;

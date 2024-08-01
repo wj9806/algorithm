@@ -64,6 +64,11 @@ typedef enum {
 typedef int (*compare)(void * k1, void * k2);
 
 /**
+ * Returns true is given array is ordered
+ */
+bool is_ordered(void* data[], int arr_len, compare cp, bool nature_sort);
+
+/**
  * Sort function
  */
 typedef void (*sort_func)(void* data[], int arr_len, compare cp, bool nature_sort);

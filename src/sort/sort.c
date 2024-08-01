@@ -3,6 +3,8 @@
 //
 
 #include "sort.h"
+#include <stdlib.h>
+#include <time.h>
 
 static void swap(void* data[], int i, int j)
 {
@@ -150,6 +152,23 @@ void shell_sort(void* data[], int arr_len, compare cp, bool nature_sort)
 
             if(i != low - gap)
                 data[i + gap] = t;
+        }
+    }
+}
+
+void monkey_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    int cnt = 0;
+    srand((unsigned)time(NULL));
+    while (true)
+    {
+        for (int i = 0; i < arr_len; i++)
+            swap(data, i, rand() % arr_len);
+        cnt++;
+        if (is_ordered(data, arr_len, cp, nature_sort))
+        {
+            debug_info("monkey_sort count: %d", cnt);
+            return;
         }
     }
 }
