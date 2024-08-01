@@ -97,3 +97,29 @@ void heap_sort(void* data[], int arr_len, compare cp, bool nature_sort)
             swap(data, i, arr_len - 1 - i);
     }
 }
+
+void insertion_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    for (int low = 0; low < arr_len; ++low) {
+        void * t = data[low];
+        int i = low - 1;
+        if(nature_sort) {
+            while (i >= 0 && cp(t, data[i]) < 0)
+            {
+                data[i + 1] = data[i];
+                i--;
+            }
+        }
+        else
+        {
+            while (i >= 0 && cp(t, data[i]) > 0)
+            {
+                data[i + 1] = data[i];
+                i--;
+            }
+        }
+
+        if(i != low - 1)
+            data[i + 1] = t;
+    }
+}

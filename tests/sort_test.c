@@ -58,5 +58,6 @@ void sort_test()
     _call_sort(bubble_sort, true);
     _call_sort(selection_sort, true);
     _call_sort(heap_sort, false);
+    _call_sort(insertion_sort, true);
 #endif
 }
