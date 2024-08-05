@@ -55,11 +55,12 @@ void sort_test()
 {
 #ifdef TEST_SORT
     __init_arr
-    _call_sort(bubble_sort, true);
-    _call_sort(selection_sort, true);
-    _call_sort(heap_sort, false);
-    _call_sort(insertion_sort, true);
-    _call_sort(shell_sort, false);
-    _call_sort(monkey_sort, true);
+    _call_sort(bubble_sort, true)
+    _call_sort(selection_sort, true)
+    _call_sort(heap_sort, false)
+    _call_sort(insertion_sort, true)
+    _call_sort(shell_sort, false)
+    _call_sort(monkey_sort, true)
+    _call_sort(merge_sort, false)
 #endif
 }

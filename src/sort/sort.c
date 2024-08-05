@@ -5,6 +5,7 @@
 #include "sort.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 static void swap(void* data[], int i, int j)
 {
@@ -171,4 +172,62 @@ void monkey_sort(void* data[], int arr_len, compare cp, bool nature_sort)
             return;
         }
     }
+}
+
+static void merge(void* a1[], int i, int i_end, int j, int j_end, void* a2[], compare cp, bool nature_sort)
+{
+    int k = i;
+    while (i <= i_end && j <= j_end)
+    {
+        if (nature_sort)
+        {
+            if (cp(a1[i], a1[j]) < 0)
+                a2[k] = a1[i++];
+            else
+                a2[k] = a1[j++];
+
+            k++;
+        }
+        else
+        {
+            if (cp(a1[i], a1[j]) > 0)
+                a2[k] = a1[i++];
+            else
+                a2[k] = a1[j++];
+
+            k++;
+        }
+    }
+
+    if (i > i_end)
+    {
+        size_t move_size = (j_end - j + 1) * sizeof(void*);
+        memmove(a2 + k, a1 + j, move_size);
+    }
+    if (j > j_end)
+    {
+        size_t move_size = (i_end - i + 1) * sizeof(void*);
+        memmove(a2 + k, a1 + i, move_size);
+    }
+
+}
+
+static void split(void* data[], int left, int right, compare cp, bool nature_sort, void* data2[])
+{
+    if (left == right) return;
+
+    int m = (left + right) >> 1;
+    split(data, left, m, cp, nature_sort, data2);
+    split(data, m + 1, right, cp, nature_sort, data2);
+
+    merge(data, left, m, m + 1, right, data2, cp, nature_sort);
+
+    size_t move_size = (right - left + 1) * sizeof(void*);
+    memmove(data + left, data2 + left, move_size);
+}
+
+void merge_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    void* data2[arr_len];
+    split(data, 0, arr_len - 1, cp, nature_sort, data2);
 }
