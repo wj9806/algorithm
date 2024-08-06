@@ -281,3 +281,47 @@ void merge_insertion_sort(void* data[], int arr_len, compare cp, bool nature_sor
     void* data2[arr_len];
     insertion_or_split(data, 0, arr_len - 1, cp, nature_sort, data2);
 }
+
+static int partition(void * data[], int left, int right, compare cp, bool nature_sort)
+{
+    void * pv = data[right];
+    int i = left, j = left;
+    while (j < right)
+    {
+        if (nature_sort)
+        {
+            if (cp(data[j], pv) < 0)
+            {
+                if (i != j)
+                    swap(data, i, j);
+                i++;
+            }
+        }
+        else
+        {
+            if (cp(data[j], pv) > 0)
+            {
+                if (i != j)
+                    swap(data, i, j);
+                i++;
+            }
+        }
+        j++;
+    }
+
+    swap(data, i, right);
+    return i;
+}
+
+static void quick(void * data[], int left, int right, compare cp, bool nature_sort)
+{
+    if(left >= right) return;
+    int p = partition(data, left, right, cp, nature_sort);
+    quick(data, left, p - 1, cp, nature_sort);
+    quick(data, p + 1, right, cp, nature_sort);
+}
+
+void quick_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    quick(data, 0, arr_len - 1, cp, nature_sort);
+}
