@@ -62,5 +62,6 @@ void sort_test()
     _call_sort(shell_sort, false)
     _call_sort(monkey_sort, true)
     _call_sort(merge_sort, false)
+    _call_sort(merge_insertion_sort, false)
 #endif
 }

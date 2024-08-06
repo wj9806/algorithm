@@ -231,3 +231,53 @@ void merge_sort(void* data[], int arr_len, compare cp, bool nature_sort)
     void* data2[arr_len];
     split(data, 0, arr_len - 1, cp, nature_sort, data2);
 }
+
+static void _insertion_sort(void* data[], int left, int right, compare cp, bool nature_sort)
+{
+    for (int low = left + 1; low <= right; ++low) {
+        void * t = data[low];
+        int i = low - 1;
+        if(nature_sort) {
+            while (i >= left && cp(t, data[i]) < 0)
+            {
+                data[i + 1] = data[i];
+                i--;
+            }
+        }
+        else
+        {
+            while (i >= left && cp(t, data[i]) > 0)
+            {
+                data[i + 1] = data[i];
+                i--;
+            }
+        }
+
+        if(i != low - 1)
+            data[i + 1] = t;
+    }
+}
+
+static void insertion_or_split(void* data[], int left, int right, compare cp, bool nature_sort, void* data2[])
+{
+    if (right - left <= 32)
+    {
+        _insertion_sort(data, left, right, cp, nature_sort);
+        return;
+    }
+
+    int m = (left + right) >> 1;
+    insertion_or_split(data, left, m, cp, nature_sort, data2);
+    insertion_or_split(data, m + 1, right, cp, nature_sort, data2);
+
+    merge(data, left, m, m + 1, right, data2, cp, nature_sort);
+
+    size_t move_size = (right - left + 1) * sizeof(void*);
+    memmove(data + left, data2 + left, move_size);
+}
+
+void merge_insertion_sort(void* data[], int arr_len, compare cp, bool nature_sort)
+{
+    void* data2[arr_len];
+    insertion_or_split(data, 0, arr_len - 1, cp, nature_sort, data2);
+}
