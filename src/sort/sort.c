@@ -338,3 +338,44 @@ void quick_sort(void* data[], int arr_len, compare cp, bool nature_sort)
 {
     quick(data, 0, arr_len - 1, cp, nature_sort);
 }
+
+void counting_sort(int data[], int arr_len, bool nature_sort)
+{
+    if (arr_len <= 0) return;
+
+    int max = data[0], min = data[0];
+    for (int i = 0; i < arr_len; ++i)
+    {
+        if (data[i] > max)
+            max = data[i];
+        if (data[i] < min)
+            min = data[i];
+    }
+
+    int range = max - min + 1;
+    int count[range];
+    memset(count, 0, sizeof(count));
+
+    for (int i = 0; i < arr_len; ++i)
+        count[data[i] - min]++;
+
+    int k = 0;
+    if (nature_sort)
+    {
+        for (int i = 0; i < range; ++i) {
+            while (count[i]) {
+                data[k++] = i + min;
+                count[i]--;
+            }
+        }
+    }
+    else
+    {
+        for (int i = range - 1; i > 0; --i) {
+            while (count[i]) {
+                data[k++] = i + min;
+                count[i]--;
+            }
+        }
+    }
+}

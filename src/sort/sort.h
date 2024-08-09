@@ -25,4 +25,6 @@ void merge_insertion_sort(void* data[], int arr_len, compare cp, bool nature_sor
 
 void quick_sort(void* data[], int arr_len, compare cp, bool nature_sort);
 
+void counting_sort(int data[], int arr_len, bool nature_sort);
+
 #endif //ALGORITHM_SORT_H

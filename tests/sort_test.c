@@ -8,6 +8,8 @@ static int sort_arr_len = 11;
 
 static void* sort_arr[11];
 
+static bool sort = true;
+
 #define __set(index, i) \
     sort_arr[index] = &int##i
 
@@ -56,11 +58,21 @@ static void print_arr()
     print_arr();\
     __reset_arr
 
+static void count_test() {
+    int count[11] = {2,3,5,8,-3,7,9,-1,3,4};
+    counting_sort(count, 11, sort);
+
+    printf("%20s: ", "counting_sort");
+    for (int i = 0; i < 10; ++i) {
+        printf("%d ", count[i]);
+    }
+    printf("\n");
+}
+
 void sort_test()
 {
 #ifdef TEST_SORT
     __init_arr
-    bool sort = false;
     _call_sort(bubble_sort, sort)
     _call_sort(selection_sort, sort)
     _call_sort(heap_sort, sort)
@@ -69,5 +81,6 @@ void sort_test()
     _call_sort(merge_sort, sort)
     _call_sort(merge_insertion_sort, sort)
     _call_sort(quick_sort, sort)
+    count_test();
 #endif
 }
