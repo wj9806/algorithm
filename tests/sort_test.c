@@ -4,7 +4,9 @@
 #include "sort.h"
 #include <stdio.h>
 
-static void* sort_arr[10];
+static int sort_arr_len = 11;
+
+static void* sort_arr[11];
 
 #define __set(index, i) \
     sort_arr[index] = &int##i
@@ -23,7 +25,9 @@ static void* sort_arr[10];
         __add(6, 0);\
         __add(7, 2);\
         __add(8, 4);\
-        __add(9, 6);
+        __add(9, 6);\
+        int int10 = 3;\
+        __set(10, 10);
 
 #define __reset_arr \
         __set(0, 8);\
@@ -35,7 +39,8 @@ static void* sort_arr[10];
         __set(6, 0);\
         __set(7, 2);\
         __set(8, 4);\
-        __set(9, 6);
+        __set(9, 6);\
+        __set(10, 10);
 
 static void print_arr()
 {
@@ -46,8 +51,8 @@ static void print_arr()
 }
 
 #define _call_sort(_func_, nature) \
-    printf("%s: ", #_func_);\
-    _func_(sort_arr, 10, int_compare, nature);\
+    printf("%20s: ", #_func_);\
+    _func_(sort_arr, sort_arr_len, int_compare, nature);\
     print_arr();\
     __reset_arr
 
@@ -55,13 +60,12 @@ void sort_test()
 {
 #ifdef TEST_SORT
     __init_arr
-    bool sort = true;
+    bool sort = false;
     _call_sort(bubble_sort, sort)
     _call_sort(selection_sort, sort)
     _call_sort(heap_sort, sort)
     _call_sort(insertion_sort, sort)
     _call_sort(shell_sort, sort)
-    _call_sort(monkey_sort, sort)
     _call_sort(merge_sort, sort)
     _call_sort(merge_insertion_sort, sort)
     _call_sort(quick_sort, sort)

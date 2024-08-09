@@ -160,7 +160,11 @@ void shell_sort(void* data[], int arr_len, compare cp, bool nature_sort)
 void monkey_sort(void* data[], int arr_len, compare cp, bool nature_sort)
 {
     int cnt = 0;
-    srand((unsigned)time(NULL));
+    static int initialized = 0;
+    if (!initialized) {
+        srand((unsigned)time(NULL));
+        initialized = 1;
+    }
     while (true)
     {
         for (int i = 0; i < arr_len; i++)
@@ -282,35 +286,44 @@ void merge_insertion_sort(void* data[], int arr_len, compare cp, bool nature_sor
     insertion_or_split(data, 0, arr_len - 1, cp, nature_sort, data2);
 }
 
+static int rand_int(int left, int right) {
+    static int initialized = 0;
+    if (!initialized) {
+        srand((unsigned)time(NULL));
+        initialized = 1;
+    }
+    int range = right - left + 1;
+    return left + rand() % range;
+}
+
 static int partition(void * data[], int left, int right, compare cp, bool nature_sort)
 {
-    void * pv = data[right];
-    int i = left, j = left;
-    while (j < right)
+    int idx = rand_int(left, right);
+    swap(data, idx, left);
+
+    void * pv = data[left];
+    int i = left + 1, j = right;
+    while (i <= j)
     {
-        if (nature_sort)
-        {
-            if (cp(data[j], pv) < 0)
-            {
-                if (i != j)
-                    swap(data, i, j);
+        if (nature_sort) {
+            while (i <= j && cp(data[i], pv) < 0)
                 i++;
-            }
+            while (i <= j && cp(data[j], pv) > 0)
+                j--;
         }
         else
         {
-            if (cp(data[j], pv) > 0)
-            {
-                if (i != j)
-                    swap(data, i, j);
+            while (i <= j && cp(data[i], pv) > 0)
                 i++;
-            }
+            while (i <= j && cp(data[j], pv) < 0)
+                j--;
         }
-        j++;
+        if (i <= j)
+            swap(data, i++, j--);
     }
 
-    swap(data, i, right);
-    return i;
+    swap(data, left, j);
+    return j;
 }
 
 static void quick(void * data[], int left, int right, compare cp, bool nature_sort)
